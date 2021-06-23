@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Prerequisites</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="application/javascript">
+      const PATH = window.location.pathname.replace(/\/+$/, '');
+      const THIS_VERSION = PATH.substring(PATH.lastIndexOf('/') + 1);
+      fetch('../versions.json')
+        .then(function(response) {
+            if (response.status == 200) {
+              response.json().then(function(versions) {
+                var select = '<select onchange="if (this.value) window.location.href=this.value">';
+                versions.forEach(function(v){
+                    select += '<option value="../'+v.version+'"';
+                    if (v.version == THIS_VERSION) select += ' selected';
+                    select += '>'+v.version;
+                    if (v.latest) select += ' (★ Latest)';
+                    select += '</option>'; 
+                });
+                select += '</select>';
+
+                var nav = document.querySelector('#nav');
+                nav.innerHTML = select;
+              });
+            } else {
+              console.log('ERROR', response);
+            }
+          }
+        ).catch(function(err) {
+          console.log('Error', err);
+        });
+    </script>
+  </head>
+  <body>
+    <nav id="nav"></nav>
+    <h1>Prerequisites</h1>
+    <section>
+      <ul>
+  <li><strong>A DRAGEN License</strong> - Contact Illumina.</li>
+  <li><strong>Access to DRAGEN Image via Azure Marketplace</strong> - Contact Illumina.</li>
+</ul>
+
+<h2 id="technical-requirements">Technical Requirements</h2>
+
+<ul>
+  <li><strong>Azure Subscription.</strong> An Azure Cloud Subscription.</li>
+  <li><strong>Quota for FPGA-enabled Virtual Machines.</strong> You will need to request a quota
+for vCPU cores for the NP-series of virtual machines on Azure.</li>
+  <li><strong>Genomic Data.</strong> This quick start will create (if it does not already exist) an
+Azure Blob Storage Account. You will need to upload your genomics data to this
+storage account to test.</li>
+  <li><strong>Azure CLI.</strong> You’ll need to <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">install</a> the Azure CLI.</li>
+</ul>
+
+    </section>
+    <footer></footer>
+  </body>
+</html>
