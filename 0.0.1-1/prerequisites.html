@@ -5,13 +5,19 @@
     <title>Prerequisites</title>
     <link rel="stylesheet" href="/css/style.css">
     <script type="application/javascript">
+      const PATH = window.location.pathname.replace(/\/+$/, '');
+      const THIS_VERSION = PATH.substring(PATH.lastIndexOf('/') + 1);
       fetch('../versions.json')
         .then(function(response) {
             if (response.status == 200) {
               response.json().then(function(versions) {
                 var select = '<select onchange="if (this.value) window.location.href=this.value">';
                 versions.forEach(function(v){
-                    select += '<option value="'+v.name+'">'+v.name+'</option>'; 
+                    select += '<option value="'+v.version+'"';
+                    if (v.version == THIS_VERSION) select += ' selected';
+                    select += '>'+v.version;
+                    if (v.latest) select += ' (★ Latest)';
+                    select += '</option>'; 
                 });
                 select += '</select>';
 
