@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Feedback & Contributing</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="application/javascript">
+      fetch('../versions.json')
+        .then(function(response) {
+            if (response.status == 200) {
+              response.json().then(function(versions) {
+                var select = '<select onchange="if (this.value) window.location.href=this.value">';
+                versions.forEach(function(v){
+                    select += '<option value="'+v.name+'">'+v.name+'</option>'; 
+                });
+                select += '</select>';
+
+                var nav = document.querySelector('#nav');
+                nav.innerHTML = select;
+              });
+            } else {
+              console.log('ERROR', response);
+            }
+          }
+        ).catch(function(err) {
+          console.log('Error', err);
+        });
+    </script>
+  </head>
+  <body>
+    <nav id="nav"></nav>
+    <h1>Feedback & Contributing</h1>
+    <section>
+      <p>Contributions are welcome!</p>
+
+<p><a href="https://github.com/Illumina/dragen-azure-quickstart">https://github.com/Illumina/dragen-azure-quickstart</a></p>
+
+<p>As the documentation within the above repository is not directly managed through the repository, please do not submit pull requests.</p>
+
+<h2 id="how-to-contribute">How to contribute</h2>
+
+<p>When you have an idea for contribution, or want to report a bug or issue, please open an <a href="https://github.com/Illumina/dragen-azure-quickstart/issues"><em>issue</em></a>!</p>
+
+<h2 id="feedback">Feedback</h2>
+
+<p>Please open a <a href="https://github.com/Illumina/dragen-azure-quickstart/issues"><em>issue</em></a> if you would like to provide any feedback on the contents of this repository.</p>
+
+    </section>
+    <footer></footer>
+  </body>
+</html>
