@@ -1,0 +1,4 @@
+---
+BUNDLE_PATH: "/home/runner/work/dragen-on-azure/dragen-on-azure/vendor/bundle"
+BUNDLE_DEPLOYMENT: "true"
+BUNDLE_JOBS: "4"
