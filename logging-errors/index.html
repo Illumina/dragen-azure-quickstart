@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Running DRAGEN on Azure | DRAGEN on Azure - Quick start</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Running DRAGEN on Azure" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="DRAGEN on Azure" />
+<meta property="og:description" content="DRAGEN on Azure" />
+<link rel="canonical" href="/" />
+<meta property="og:url" content="/" />
+<meta property="og:site_name" content="DRAGEN on Azure - Quick start" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Running DRAGEN on Azure" />
+<script type="application/ld+json">
+{"description":"DRAGEN on Azure","url":"/","@type":"WebSite","headline":"Running DRAGEN on Azure","name":"DRAGEN on Azure - Quick start","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="DRAGEN on Azure - Quick start" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">DRAGEN on Azure - Quick start</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Running DRAGEN on Azure</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <nav id="nav"></nav>
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Running DRAGEN on Azure</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="introduction-to-dragen-on-azure">Introduction to DRAGEN on Azure</h2>
+
+<p>This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
+
+<p>This tutorial and its associated Marketplace solution in Azure (TODO: Do we want to link directly to this?) were developed by Illumina in collaboration with Microsoft.  The reference deployment described below serves as a starting point, but can be further customized to meet your needs.</p>
+
+<p>If you run into any issues while going through the tutorial, please <a href="#feedback-and-contributing">share your feedback with us</a>!</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>Insert overview content here</p>
+
+<h2 id="architecture">Architecture</h2>
+
+<h3 id="supported-regions">Supported Regions</h3>
+
+<p>DRAGEN on Azure is available in regions where FPGA-enabled <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">Standard NP Family VMs</a> are available.  Supported regions currently include:</p>
+
+<ul>
+  <li>West US 2</li>
+  <li>East US</li>
+  <li>Southeast Asia (Singapore)</li>
+  <li>West Europe (Amsterdam)</li>
+</ul>
+
+<h3 id="architecture-diagram">Architecture Diagram</h3>
+
+<p><img src="./images/dragen-on-azure.png" alt="architecture-diagram" /></p>
+
+<h3 id="resource-list">Resource List</h3>
+
+<p>List of Azure resources that are deployed by this quickstart if default settings and parameters are used:</p>
+
+<ul>
+  <li>Blob Storage account for input and output data
+    <ul>
+      <li>Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations</li>
+    </ul>
+  </li>
+  <li>Azure Batch account for managing and scheduling DRAGEN jobs</li>
+  <li>User Subscription node pool backed by one <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series VM</a> (fixed scale)</li>
+  <li>Key Vault for batch service auth to User Subscription job pool VMs
+    <ul>
+      <li>Note: Batch service handles auth automatically, so users do not need to take any further action after the Key Vault is created.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="quota-increases">Quota Increases</h3>
+
+<h4 id="np-series-vms">NP-Series VMs</h4>
+
+<p>DRAGEN runs on FPGA-enabled VMs, which are now generally available as the NP-series on Azure.  In order to enable access to these VM SKUs by Batch service, users will need to contact support to request a quota.  This applies to both user subscription and batch managed job pools.</p>
+
+<p>All users who deploy DRAGEN through Batch service will need to request a quota for the NP-series VM SKU by submitting a support request.  In your Batch account in the Azure portal, go to the “Quotas” tab and use the button labeled “Request quota increase” to start a new request.</p>
+
+<h4 id="batch-accounts">Batch Accounts</h4>
+
+<p>Depending on the user’s workflow, it may also be necessary to request an increase in quota for Batch accounts.  Current default quotas for Batch accounts can be found <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#resource-quotas">here</a>.</p>
+
+<p>If you need to increase your Batch account quota, see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#increase-a-quota">this page</a> for more information on creating a support request.</p>
+
+<h3 id="note-on-batch-node-pool-allocation">Note on Batch Node Pool Allocation</h3>
+
+<p>Batch offers two options for allocation of node pools: Batch managed and user subscription modes.</p>
+
+<h4 id="batch-managed-node-pools">Batch Managed Node Pools</h4>
+
+<p>When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD.</p>
+
+<h4 id="user-subscription-node-pools">User Subscription Node Pools</h4>
+
+<p>When the User Subscription allocation mode is selected, users request an overall quota for NP VMs for a region within their subscription.  With this model, the VMs needed for the Batch account are created directly in the user’s subscription.  This setup is useful for CI/CD and other cases where users are running DRAGEN across many Batch accounts within a subscription and/or the Batch accounts are short-lived.</p>
+
+<h4 id="cost-differences-in-node-pool-allocation-modes">Cost Differences in Node Pool Allocation Modes</h4>
+
+<p>There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs.</p>
+
+<h3 id="azure-costs">Azure Costs</h3>
+
+<p>Users are responsible for costs of any services deployed through this quickstart or its customization options.</p>
+
+<p>Prices are subject to change - more information can be found on the pricing pages for Azure resources deployed through this tutorial:</p>
+
+<ul>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/storage/blobs/">Azure Blob Storage</a></li>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/batch/windows-virtual-machines/">Azure Batch</a>
+    <ul>
+      <li><em>Note: There is currently no charge for Batch itself, only the compute resources it uses; see VM pricing below</em></li>
+    </ul>
+  </li>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/#np-series">NP-series VMs</a> (a NP10s is used in this reference deployment)</li>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing">Key Vault</a></li>
+</ul>
+
+<p>Users are also responsible for costs of any licenses needed to run DRAGEN (not included in this quickstart - must be obtained separately).</p>
+
+<h4 id="estimate-your-costs">Estimate your Costs</h4>
+
+<p>For help in estimating your costs to run DRAGEN on Azure, see the pricing calculator located <a href="https://azure.microsoft.com/en-us/pricing/calculator/">here</a>.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li><strong>A DRAGEN License</strong> - Contact Illumina.</li>
+  <li><strong>Access to DRAGEN Image via Azure Marketplace</strong> - Contact Illumina.</li>
+</ul>
+
+<h3 id="technical-requirements">Technical Requirements</h3>
+
+<ul>
+  <li><strong>Azure Subscription.</strong> An Azure Cloud Subscription.</li>
+  <li><strong>Quota for FPGA-enabled Virtual Machines.</strong> You will need to request a quota
+for vCPU cores for the NP-series of virtual machines on Azure.</li>
+  <li><strong>Genomic Data.</strong> This quick start will create (if it does not already exist) an
+Azure Blob Storage Account. You will need to upload your genomics data to this
+storage account to test.</li>
+  <li><strong>Azure CLI.</strong> You’ll need to <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">install</a> the Azure CLI.</li>
+</ul>
+
+<h2 id="deployment-steps">Deployment Steps</h2>
+
+<h3 id="login-to-your-azure-portal-account">Login to your Azure Portal account</h3>
+
+<ol>
+  <li>Log in to your Azure account in the <a href="https://portal.azure.com">Azure Portal</a>.</li>
+  <li>
+    <p>Ensure you have Quota for FPGA-enabled Virtual Machines, as outlined in the
+pre-requisites section above, by navigating to:</p>
+
+    <ul>
+      <li>Subscriptions -&gt; Choose your subscription</li>
+      <li>Click <strong>Usages + quotas</strong> from the left-side menu</li>
+      <li>Filter the list by typing <strong>NP</strong> into the left search bar.
+        <ul>
+          <li>You should see <code class="language-plaintext highlighter-rouge">Standard NPS Family vCPUs</code>, and a denomination. If you see
+<code class="language-plaintext highlighter-rouge">0 of 0</code>, click the edit icon to request quota.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="deploy-the-quickstart-solution-template">Deploy the Quickstart (solution template)</h3>
+
+<ol>
+  <li>While signed in your Azure account, open the page for the DRAGEN Solution
+(TODO: need link to dragen marketplace solution here), and then click “Get It
+Now”</li>
+  <li>Review the terms and conditions, and then choose <strong>Accept Terms</strong></li>
+  <li>You’ll be prompted to select a resource group, and other particulars of the
+solution to deploy. Once you’ve made your selections, click <strong>Review + Create</strong>
+at the bottom of the screen</li>
+  <li>You can check deployment status in the top right of the Azure Portal page.
+(TODO: insert screenshot here)</li>
+</ol>
+
+<h2 id="deployment---additional-configurations">Deployment - Additional Configurations</h2>
+
+<h3 id="batch-job--task-timeout">Batch Job &amp; Task Timeout</h3>
+
+<p>It is possible to set a max run time on either the batch job or batch task.</p>
+
+<p><a href="https://docs.microsoft.com/en-us/cli/azure/batch/job?view=azure-cli-latest#az_batch_job_set">Batch job set CLI reference</a></p>
+
+<p>The below command will terminate the batch job as well as all tasks within
+it after the job has been present for 360 minutes.</p>
+
+<ul>
+  <li>JOB_ID: The job id of the already created job.</li>
+  <li>PT360M: An ISO-8601 duration, PT360M = 360 minutes.</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job <span class="nb">set</span> <span class="se">\</span>
+    <span class="nt">--job-id</span> <span class="nv">$JOB_ID</span> <span class="se">\</span>
+    <span class="nt">--on-all-tasks-complete</span> <span class="s2">"terminatejob"</span> <span class="se">\</span>
+    <span class="nt">--job-max-wall-clock-time</span> <span class="s2">"PT360M"</span>
+</code></pre></div></div>
+
+<p><a href="https://docs.microsoft.com/en-us/rest/api/batchservice/task/add#taskconstraints">Task constraints CLI reference</a></p>
+
+<p>If you would like to set a max run time on the batch task instead, you can add
+the following section to the task.json:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"maxWallClockTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT360M"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="best-practices-for-dragen-on-azure">Best Practices for DRAGEN on Azure</h2>
+
+<p>Insert best practices for DRAGEN on Azure content here</p>
+
+<h2 id="test-the-deployment-using-the-azure-cli">Test the Deployment using the Azure CLI</h2>
+
+<p>Once your batch account infrastructure has been created, the following guide
+can be used to create batch jobs and tasks.  The following guide makes use
+of the Azure CLI.</p>
+
+<h3 id="azure-cli-authentication">Azure CLI Authentication</h3>
+
+<p>The first step is to make sure you are
+<a href="https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli">authenticated</a>
+through <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">Azure CLI</a>,
+and using the subscription in which your batch account has been provisioned.</p>
+
+<h3 id="batch-account-login">Batch Account Login</h3>
+
+<p>You will need to authenticate with the provisioned batch account in order to
+create jobs and tasks.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> az batch account login <span class="nt">-n</span> &lt;batch account name&gt; <span class="nt">-g</span> &lt;resource group name&gt;
+</code></pre></div></div>
+
+<h3 id="create-batch-job">Create Batch Job</h3>
+
+<p>Once authenticated, the next step is to create a batch job.</p>
+
+<ul>
+  <li>JOB_ID: A unique id to assign to the job being created.</li>
+  <li>POOL_ID: The name of the pool created with the provided ARM template.</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> &lt;JOB_ID&gt; pool-id &lt;POOL_ID&gt;
+</code></pre></div></div>
+
+<h3 id="create-batch-task">Create Batch Task</h3>
+
+<p>Once the batch job has been created, a task can be added to it.</p>
+
+<ul>
+  <li>JOB_ID: The same job id used when creating the batch job.</li>
+  <li>TASK_ID: A unique task id to assign to the task being created.</li>
+</ul>
+
+<h4 id="batch-command">Batch Command</h4>
+
+<p>The command passed to the batch task is what will run once the batch task
+starts.  The following is an example that will run a series of commands
+using bash.</p>
+
+<ul>
+  <li>REF_DIR: The directory to untar the genome hash table to.</li>
+  <li>OUT_DIR: The directory to write the DRAGEN results to.</li>
+  <li>FQ1: The path to the first local FastQ file on the node.</li>
+  <li>FQ2: The path to the second local FastQ file on the node.</li>
+  <li>RGID: The RGID associated with this DRAGEN run.</li>
+  <li>RGSM: THE RGSM associated with this DRAGEN run.</li>
+  <li>LICENSE: The DRAGEN license.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
+<span class="s1">'mkdir &lt;REF_DIR&gt; &lt;OUT_DIR&gt;; \
+tar xzvf dragen.tar -C &lt;REF_DIR&gt;; \
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
+/opt/edico/bin/dragen -f -r &lt;REF_DIR&gt; \
+    -1 &lt;FQ1&gt; \
+    -2 &lt;FQ2&gt; \
+    --RGID &lt;RGID&gt; \
+    --RGSM &lt;RGSM&gt; \
+    --enable-bam-indexing true \
+    --enable-map-align-output true \
+    --enable-sort true \
+    --output-file-prefix dragen-batch \
+    --enable-map-align true \
+    --output-format BAM \
+    --output-directory &lt;OUT_DIR&gt; \
+    --enable-variant-caller true \
+    --lic-server &lt;LICENSE&gt;
+</span></code></pre></div></div>
+
+<h4 id="resource-files">Resource Files</h4>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint">Resource Files Reference</a></li>
+</ul>
+
+<p>In this example, both the genome file and the FastQ list file need to be on the
+batch node when running the batch command.  This script takes advantage of the
+<code class="language-plaintext highlighter-rouge">--resources-files</code> batch task option to facilitate this.</p>
+
+<p>If the genome tar and FastQ files are in a private blob storage account, a
+SAS token will need to be generated to allow batch to download the file.</p>
+
+<h5 id="sas">SAS</h5>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas">SAS CLI Reference</a></li>
+</ul>
+
+<p>The following example will generate a full URL with SAS token to access a
+file in a private blob storage account.</p>
+
+<ul>
+  <li>BLOB_PATH: The path to the file within the container.</li>
+  <li>STORAGE_ACCOUNT: The name of the blob storage account.</li>
+  <li>STORAGE_ACCOUNT_KEY: An access key to the storage account.</li>
+  <li>EXPIRE_DATE: The datetime when the SAS token should expire.</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az storage blob generate-sas <span class="se">\</span>
+    <span class="nt">--name</span> &lt;BLOB_PATH&gt; <span class="se">\</span>
+    <span class="nt">--account-name</span> &lt;STORAGE_ACCOUNT&gt; <span class="se">\</span>
+    <span class="nt">--account-key</span> &lt;STORAGE_ACCOUNT_KEY&gt; <span class="se">\</span>
+    <span class="nt">--container-name</span> &lt;CONTAINER_NAME&gt; <span class="se">\</span>
+    <span class="nt">--expiry</span> &lt;EXPIRE_DATE&gt; <span class="se">\</span>
+    <span class="nt">--permissions</span> r <span class="se">\</span>
+    <span class="nt">--https</span> <span class="se">\</span>
+    <span class="nt">--full-uri</span> <span class="se">\</span>
+    <span class="nt">--output</span> tsv
+</code></pre></div></div>
+
+<h4 id="create">Create</h4>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create">Batch task create CLI reference</a></li>
+</ul>
+
+<p>With the command generated to run within the task, and accessible URLs
+generated for the genome tar and FastQ files, the following command
+can be used to create the batch task.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
+    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
+    <span class="nt">--task-id</span> &lt;TASK_ID&gt; <span class="se">\</span>
+    <span class="nt">--command-line</span> <span class="s2">"&lt;COMMAND&gt;"</span> <span class="se">\</span>
+    <span class="nt">--resource-files</span> dragen.tar<span class="o">=</span>&lt;GENOME_URL&gt; 1.fq.gz<span class="o">=</span>&lt;FQ1_URL&gt; 2.fq.gz<span class="o">=</span>&lt;FQ2_URL&gt;
+</code></pre></div></div>
+
+<h4 id="working-example">Working Example</h4>
+
+<p>TODO: Fill in public genome url, fastq urls, and associated RGID and RGSM</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> job1 pool-id mypool
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
+<span class="s1">'mkdir dragen output; \
+tar xzvf dragen.tar -C dragen; \
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
+/opt/edico/bin/dragen -f -r dragen \
+    -1 1.fq.gz \
+    -2 2.fq.gz \
+    --RGID &lt;RGID&gt; \
+    --RGSM &lt;RGSM&gt; \
+    --enable-bam-indexing true \
+    --enable-map-align-output true \
+    --enable-sort true \
+    --output-file-prefix dragen-batch \
+    --enable-map-align true \
+    --output-format BAM \
+    --output-directory output \
+    --enable-variant-caller true \
+    --lic-server &lt;LICENSE&gt;
+</span></code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
+    <span class="nt">--job-id</span> job1 <span class="se">\</span>
+    <span class="nt">--task-id</span> task1 <span class="se">\</span>
+    <span class="nt">--command-line</span> <span class="s2">"&lt;COMMAND&gt;"</span> <span class="se">\</span>
+    <span class="nt">--resource-files</span> dragen.tar<span class="o">=</span>&lt;GENOME_URL&gt; 1.fq.gz<span class="o">=</span>&lt;FQ1_URL&gt; 2.fq.gz<span class="o">=</span>&lt;FQ2_URL&gt;
+</code></pre></div></div>
+
+<h4 id="alternate-file-references">Alternate File References</h4>
+
+<h5 id="file-streaming">File Streaming</h5>
+
+<p>While it is always necessary to have the genome file locally on the node, DRAGEN
+can stream the FastQ files for faster processing.</p>
+
+<h6 id="stream-from-public-url">Stream From Public URL</h6>
+
+<ul>
+  <li>FQ1_URL: The full URL to the first public FastQ file.</li>
+  <li>FQ2_URL: The full URL to the second public FastQ file.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
+<span class="s1">'mkdir dragen output; \
+tar xzvf dragen.tar -C dragen; \
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
+/opt/edico/bin/dragen -f -r dragen \
+    -1 &lt;FQ1_URL&gt; \
+    -2 &lt;FQ2_URL&gt; \
+    --RGID &lt;RGID&gt; \
+    --RGSM &lt;RGSM&gt; \
+    --enable-bam-indexing true \
+    --enable-map-align-output true \
+    --enable-sort true \
+    --output-file-prefix dragen-batch \
+    --enable-map-align true \
+    --output-format BAM \
+    --output-directory output \
+    --enable-variant-caller true \
+    --lic-server &lt;LICENSE&gt;
+</span></code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
+    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
+    <span class="nt">--task-id</span> &lt;TASK_ID&gt; <span class="se">\</span>
+    <span class="nt">--command-line</span> <span class="s2">"&lt;COMMAND&gt;"</span> <span class="se">\</span>
+    <span class="nt">--resource-files</span> dragen.tar<span class="o">=</span>&lt;GENOME_URL&gt;
+</code></pre></div></div>
+
+<h6 id="stream-from-azure-blob-storage">Stream from Azure Blob Storage</h6>
+
+<ul>
+  <li>STORAGE_ACCOUNT: The name of the blob storage account.</li>
+  <li>STORAGE_ACCOUNT_KEY: An access key to the storage account.</li>
+  <li>FQ1_URL: The full URL to the first FastQ file in Azure Blob Storage.</li>
+  <li>FQ2_URL: The full URL to the second FastQ file in Azure Blob Storage.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
+<span class="s1">'echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; \
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; \
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; \
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; \
+mkdir dragen output; \
+tar xzvf dragen.tar -C dragen; \
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
+/opt/edico/bin/dragen -f -r dragen \
+    -1 &lt;FQ1_URL&gt; \
+    -2 &lt;FQ2_URL&gt; \
+    --RGID &lt;RGID&gt; \
+    --RGSM &lt;RGSM&gt; \
+    --enable-bam-indexing true \
+    --enable-map-align-output true \
+    --enable-sort true \
+    --output-file-prefix dragen-batch \
+    --enable-map-align true \
+    --output-format BAM \
+    --output-directory output \
+    --enable-variant-caller true \
+    --lic-server &lt;LICENSE&gt;
+</span></code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
+    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
+    <span class="nt">--task-id</span> &lt;TASK_ID&gt; <span class="se">\</span>
+    <span class="nt">--command-line</span> <span class="s2">"&lt;COMMAND&gt;"</span> <span class="se">\</span>
+    <span class="nt">--resource-files</span> dragen.tar<span class="o">=</span>&lt;GENOME_URL&gt;
+</code></pre></div></div>
+
+<h5 id="fastq-list">FastQ List</h5>
+
+<p>If using a FastQ list file to reference and stream FastQ files, the Fast list file must
+also be local to the node.  The below example shows an example of this using the
+resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.</p>
+
+<p>Since we are streaming from Azure Blob Storage, we will need the <code class="language-plaintext highlighter-rouge">~/.azure-credentials</code> file
+again.</p>
+
+<p><code class="language-plaintext highlighter-rouge">LIST_URL=</code></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az storage blob generate-sas <span class="se">\</span>
+    <span class="nt">--name</span> &lt;FASTQ_LIST_BLOB_PATH&gt; <span class="se">\</span>
+    <span class="nt">--account-name</span> &lt;STORAGE_ACCOUNT&gt; <span class="se">\</span>
+    <span class="nt">--account-key</span> &lt;STORAGE_ACCOUNT_KEY&gt; <span class="se">\</span>
+    <span class="nt">--container-name</span> &lt;CONTAINER_NAME&gt; <span class="se">\</span>
+    <span class="nt">--expiry</span> &lt;EXPIRE_DATE&gt; <span class="se">\</span>
+    <span class="nt">--permissions</span> r <span class="se">\</span>
+    <span class="nt">--https</span> <span class="se">\</span>
+    <span class="nt">--full-uri</span> <span class="se">\</span>
+    <span class="nt">--output</span> tsv
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
+<span class="s1">'echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; \
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; \
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; \
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; \
+mkdir dragen output; \
+tar xvf dragen.tar -C dragen; \
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
+/opt/edico/bin/dragen -f -r dragen \
+    --fastq-list fastq_list.csv \
+    --fastq-list-sample-id &lt;RGSM&gt; \
+    --enable-bam-indexing true \
+    --enable-map-align-output true \
+    --enable-sort true \
+    --output-file-prefix dragen-batch \
+    --enable-map-align true \
+    --output-format BAM \
+    --output-directory output \
+    --enable-variant-caller true \
+    --lic-server &lt;LICENSE&gt;
+</span></code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
+    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
+    <span class="nt">--task-id</span> &lt;TASK_ID&gt; <span class="se">\</span>
+    <span class="nt">--command-line</span> <span class="s2">"&lt;COMMAND&gt;"</span> <span class="se">\</span>
+    <span class="nt">--resource-files</span> dragen.tar<span class="o">=</span><span class="nv">$GENOME_URL</span> fastq_list.csv<span class="o">=</span>&lt;LIST_URL&gt;
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>Insert troubleshooting content here</p>
+
+<h2 id="faq">FAQ</h2>
+
+<p>Insert FAQ content here</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p>Insert additional resources content here</p>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>Contributions are welcome!</p>
+
+<p><a href="https://github.com/Illumina/dragen-azure-quickstart">https://github.com/Illumina/dragen-azure-quickstart</a></p>
+
+<p>As the documentation within the above repository is not directly managed through the repository, please do not submit pull requests.</p>
+
+<h3 id="how-to-contribute">How to contribute</h3>
+
+<p>When you have an idea for contribution, or want to report a bug or issue, please open an <a href="https://github.com/Illumina/dragen-azure-quickstart/issues"><em>issue</em></a>!</p>
+
+<h3 id="feedback">Feedback</h3>
+
+<p>Please open a <a href="https://github.com/Illumina/dragen-azure-quickstart/issues"><em>issue</em></a> if you would like to provide any feedback on the contents of this repository.</p>
+
+<h2 id="notices">Notices</h2>
+
+<p>This document is provided for informational purposes only. It represents Azure’s current product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of Azure’s products or services, each of which is provided “as is” without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from Azure, its affiliates, suppliers, or licensors. The responsibilities and liabilities of Azure to its customers are controlled by Azure agreements, and this document is not part of, nor does it modify, any agreement between Azure and its customers.</p>
+
+<h3 id="legal-notices">Legal Notices</h3>
+
+<p>Microsoft and any contributors grant you a license to the Microsoft documentation and other content in this repository under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 International Public License</a>, see the <a href="LICENSE">LICENSE</a> file, and grant you a license to any code in the repository under the <a href="https://opensource.org/licenses/MIT">MIT License</a>, see the <a href="LICENSE-CODE">LICENSE-CODE</a> file.</p>
+
+<p>Microsoft, Windows, Microsoft Azure and/or other Microsoft products and services referenced in the documentation may be either trademarks or registered trademarks of Microsoft in the United States and/or other countries. The licenses for this project do not grant you rights to use any Microsoft names, logos, or trademarks. Microsoft’s general trademark guidelines can be found at <a href="http://go.microsoft.com/fwlink/?LinkID=254653">http://go.microsoft.com/fwlink/?LinkID=254653</a>.</p>
+
+<p>Privacy information can be found at <a href="https://privacy.microsoft.com/en-us/">https://privacy.microsoft.com/en-us/</a></p>
+
+<p>Microsoft and any contributors reserve all others rights, whether under their respective copyrights, patents, or trademarks, whether by implication, estoppel or otherwise.</p>
+
+<h2 id="privacy">Privacy</h2>
+
+<p>Insert privacy content here</p>
+
+
+  </div>
+
+</article>
+
+<script type="application/javascript">
+  const PATH = window.location.pathname.replace(/\/+$/, '');
+  const THIS_VERSION = PATH.substring(PATH.lastIndexOf('/') + 1);
+  fetch('../versions.json')
+    .then(function(response) {
+        if (response.status == 200) {
+          response.json().then(function(versions) {
+            var select = '<select onchange="if (this.value) window.location.href=this.value">';
+            versions.forEach(function(v){
+                select += '<option value="../'+v.version+'"';
+                if (v.version == THIS_VERSION) select += ' selected';
+                select += '>'+v.version;
+                if (v.latest) select += ' (★ Latest)';
+                select += '</option>'; 
+            });
+            select += '</select>';
+            var nav = document.querySelector('#nav');
+            nav.innerHTML = select;
+          });
+        } else {
+          console.log('ERROR', response);
+        }
+      }
+    ).catch(function(err) {
+      console.log('Error', err);
+    });
+</script>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">DRAGEN on Azure - Quick start</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">DRAGEN on Azure - Quick start</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>DRAGEN on Azure</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
