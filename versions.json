@@ -15,10 +15,7 @@
     "version": "3.8.4-2"
   },
   {
-    "version": "logging-errors"
-  },
-  {
-    "version": "main",
+    "version": "logging-errors",
     "latest": true
   }
 ]
