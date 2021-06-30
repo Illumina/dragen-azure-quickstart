@@ -12,7 +12,10 @@
     "version": "3.8.4-1"
   },
   {
-    "version": "logging-errors",
+    "version": "logging-errors"
+  },
+  {
+    "version": "main",
     "latest": true
   }
 ]
