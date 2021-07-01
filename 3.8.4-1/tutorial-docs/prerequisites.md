@@ -1,5 +1,3 @@
-## Prerequisites
-
 * **A DRAGEN License** - Contact Illumina.
 * **Access to DRAGEN Image via Azure Marketplace** - Contact Illumina.
 

@@ -1,5 +1,3 @@
-## Test the Deployment using the Azure CLI
-
 Once your batch account infrastructure has been created, the following guide
 can be used to create batch jobs and tasks.  This guide makes use of the
 Azure CLI.
@@ -17,7 +15,7 @@ You will need to authenticate with the provisioned batch account in order to
 create jobs and tasks.
 
 ```sh
-> az batch account login -n <batch account name> -g <resource group name>
+az batch account login -n <batch account name> -g <resource group name>
 ```
 
 ### Create Batch Job
@@ -47,15 +45,15 @@ using bash.
 
 * REF_DIR: The directory to untar the genome hash table to.
 * OUT_DIR: The directory to write the DRAGEN results to.
-* FQ1: The path to the first local FastQ file on the node.
-* FQ2: The path to the second local FastQ file on the node.
+* FQ1: The path to the first local FASTQ file on the node.
+* FQ2: The path to the second local FASTQ file on the node.
 * RGID: The RGID associated with this DRAGEN run.
 * RGSM: THE RGSM associated with this DRAGEN run.
 * LICENSE: The DRAGEN license.
 
 ```bash
 /bin/bash -c \
-'mkdir <REF_DIR> <OUT_DIR>; \
+"mkdir <REF_DIR> <OUT_DIR>; \
 tar xzvf dragen.tar -C <REF_DIR>; \
 /opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
 /opt/edico/bin/dragen -f -r <REF_DIR> \
@@ -71,10 +69,10 @@ tar xzvf dragen.tar -C <REF_DIR>; \
     --output-format BAM \
     --output-directory <OUT_DIR> \
     --enable-variant-caller true \
-    --lic-server <LICENSE>
+    --lic-server <LICENSE>"
 ```
 
-##### SAS
+#### SAS
 
 * [SAS CLI Reference](https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas)
 
@@ -110,7 +108,7 @@ az storage container generate-sas \
     --expiry <EXPIRE_DATE> \
     --permissions aclrw \
     --https-only \
-    --output tsv)"
+    --output tsv
 ```
 
 In this case, the SAS token returned by the command will need to be
@@ -124,11 +122,11 @@ CONTAINER_URL="https://<STORAGE_ACCOUNT>.blob.core.windows.net/<CONTAINER>?<SAS_
 
 * [Resource Files Reference](https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint)
 
-In this example, both the genome file and the FastQ list file need to be on the
+In this example, both the genome file and the FASTQ files need to be on the
 batch node when running the batch command.  This script takes advantage of the
 `resourceFiles` configuration to facilitate this.
 
-If the genome tarball and FastQ files are in a private blob storage account, a
+If the genome tarball and FASTQ files are in a private blob storage account, a
 SAS token will need to be generated to allow batch to download the file.
 
 ```json
@@ -233,15 +231,15 @@ with each of the sections described in detail above.
 * [Batch task create CLI reference](https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create)
 
 With the command generated to run within the task, and accessible URLs
-generated for the genome tarball and FastQ files, the following command
+generated for the genome tarball and FASTQ files, the following command
 can be used to create the batch task.
 
 The below URLs must either be public, or private but made accessible
 (for example, with a SAS token).
 
 * GENOME_URL: URL of a genome tarball.
-* FQ1_URL: URL of the first FastQ file.
-* FQ2_URL: URL of the second FastQ file.
+* FQ1_URL: URL of the first FASTQ file.
+* FQ2_URL: URL of the second FASTQ file.
 
 ```sh
 az batch task create \
@@ -261,14 +259,14 @@ az batch job create --id job1 pool-id mypool
 
 ```bash
 /bin/bash -c \
-'mkdir dragen output; \
+"mkdir dragen output; \
 tar xzvf dragen.tar -C dragen; \
 /opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
 /opt/edico/bin/dragen -f -r dragen \
     -1 1.fq.gz \
     -2 2.fq.gz \
-    --RGID <RGID> \
-    --RGSM <RGSM> \
+    --RGID NA24385-AJ-Son-R1-NS_S33 \
+    --RGSM NA24385-AJ-Son-R1-NS_S33 \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
@@ -277,7 +275,7 @@ tar xzvf dragen.tar -C dragen; \
     --output-format BAM \
     --output-directory output \
     --enable-variant-caller true \
-    --lic-server <LICENSE>
+    --lic-server <LICENSE>"
 ```
 
 task.json
@@ -288,13 +286,13 @@ task.json
     "commandLine": "$COMMAND",
     "resourceFiles": [{
         "filePath": "dragen.tar",
-        "httpUrl": "<Need public genome URL>"
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38_altaware_nohla-cnv-anchored.v8.tar"
     }, {
         "filePath": "1.fq.gz",
-        "httpUrl": "<Need public fastq1 URL>"
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R1_001.fastq.gz"
     }, {
         "filePath": "2.fq.gz",
-        "httpUrl": "<Need public fastq2 URL>"
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R2_001.fastq.gz"
     }],
     "outputFiles": [{
         "filePattern": "../stdout.txt",
@@ -361,62 +359,23 @@ az batch task create \
     --json-file task.json
 ```
 
-#### Alternate File References
-
-##### File Streaming
+#### File Streaming
 
 While it is always necessary to have the genome file locally on the node, DRAGEN
-can stream the FastQ files for faster processing.
+can stream input FASTQ files and BAMs from Azure for faster processing.
 
-###### Stream From Public URL
-
-* FQ1_URL: The full URL to the first public FastQ file.
-* FQ2_URL: The full URL to the second public FastQ file.
-
-`COMMAND=`
-
-```bash
-/bin/bash -c \
-'mkdir dragen output; \
-tar xzvf dragen.tar -C dragen; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r dragen \
-    -1 <FQ1_URL> \
-    -2 <FQ2_URL> \
-    --RGID <RGID> \
-    --RGSM <RGSM> \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory output \
-    --enable-variant-caller true \
-    --lic-server <LICENSE>
-```
-
-In this case, the FastQ files will no longer need to be referenced in the
-resourceFiles in the task.json
-
-```sh
-az batch task create \
-    --job-id <JOB_ID> \
-    --json-file task.json
-```
-
-###### Stream from Azure Blob Storage
+##### Stream from Azure Blob Storage
 
 * STORAGE_ACCOUNT: The name of the blob storage account.
 * STORAGE_ACCOUNT_KEY: An access key to the storage account.
-* FQ1_URL: The full URL to the first FastQ file in Azure Blob Storage.
-* FQ2_URL: The full URL to the second FastQ file in Azure Blob Storage.
+* FQ1_URL: The full URL to the first FASTQ file in Azure Blob Storage.
+* FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.
 
 `COMMAND=`
 
 ```bash
 /bin/bash -c \
-'echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
+"echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
 echo AccountName=<STORAGE_ACCOUNT_NAME> >> ~/.azure-credentials; \
 echo AccountKey=<STORAGE_ACCOUNT_KEY> >> ~/.azure-credentials; \
 echo EndpointSuffix=core.windows.net >> ~/.azure-credentials; \
@@ -436,10 +395,10 @@ tar xzvf dragen.tar -C dragen; \
     --output-format BAM \
     --output-directory output \
     --enable-variant-caller true \
-    --lic-server <LICENSE>
+    --lic-server <LICENSE>"
 ```
 
-In this case, the FastQ files will no longer need to be referenced in the
+In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json
 
 ```sh
@@ -448,10 +407,12 @@ az batch task create \
     --json-file task.json
 ```
 
-##### FastQ List
+##### FASTQ List
 
-If using a FastQ list file to reference and stream FastQ files, the Fast list file must
-also be local to the node.  The below example shows an example of this using the
+If using a FASTQ list file to reference and stream FASTQ files, the FASTQ list file must
+also be local to the node.  The FASTQ files referenced in the FASTQ list can be URLs
+to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
+The below example shows an example of this using the
 resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.
 
 Since we are streaming from Azure Blob Storage, we will need the `~/.azure-credentials` file
@@ -476,7 +437,7 @@ az storage blob generate-sas \
 
 ```bash
 /bin/bash -c \
-'echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
+"echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
 echo AccountName=<STORAGE_ACCOUNT_NAME> >> ~/.azure-credentials; \
 echo AccountKey=<STORAGE_ACCOUNT_KEY> >> ~/.azure-credentials; \
 echo EndpointSuffix=core.windows.net >> ~/.azure-credentials; \
@@ -494,7 +455,7 @@ tar xvf dragen.tar -C dragen; \
     --output-format BAM \
     --output-directory output \
     --enable-variant-caller true \
-    --lic-server <LICENSE>
+    --lic-server <LICENSE>"
 ```
 
 task.json resourceFiles:
@@ -514,3 +475,15 @@ az batch task create \
     --job-id <JOB_ID> \
     --json-file task.json
 ```
+
+##### Example Bash Script
+
+An [example bash script](../docs-create-task.sh) using the above commands is available for reference.
+There is a required `LICENSE_URL` environment variable, as well as some variables within the script
+that must be set before running it, ie:
+
+```sh
+LICENSE_URL=https://<username>:<password>@license.edico.com ./create-batch-task.sh
+```
+
+There are accompanying comments within the bash script to help set these.

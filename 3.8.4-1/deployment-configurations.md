@@ -1,5 +1,3 @@
-## Deployment - Additional Configurations
-
 ### Batch Job & Task Timeout
 
 It is possible to set a max run time on either the batch job or batch task.

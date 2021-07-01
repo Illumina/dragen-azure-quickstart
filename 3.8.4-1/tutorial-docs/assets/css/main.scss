@@ -1,0 +1,17 @@
+---
+---
+
+@import "hydeout";
+
+.home #sidebar {
+    position: fixed;
+    top: 0;
+
+    .site-title {
+        font-size: 2.0rem;
+    }
+}
+
+.sidebar-nav-list {
+    margin-left: 10px;
+}

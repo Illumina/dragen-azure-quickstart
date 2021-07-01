@@ -1,4 +1,5 @@
-I"ºƒ<h2 id="introduction-to-dragen-on-azure">Introduction to DRAGEN on Azure</h2>
+I"È◊
+<h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
 
@@ -6,9 +7,7 @@
 
 <p>If you run into any issues while going through the tutorial, please <a href="#feedback-and-contributing">share your feedback with us</a>!</p>
 
-<h2 id="overview">Overview</h2>
-
-<p>Insert overview content here</p>
+<p><br /></p>
 
 <h2 id="architecture">Architecture</h2>
 
@@ -99,6 +98,8 @@
 
 <p>For help in estimating your costs to run DRAGEN on Azure, see the pricing calculator located <a href="https://azure.microsoft.com/en-us/pricing/calculator/">here</a>.</p>
 
+<p><br /></p>
+
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
@@ -117,6 +118,8 @@ Azure Blob Storage Account. You will need to upload your genomics data to this
 storage account to test.</li>
   <li><strong>Azure CLI.</strong> You‚Äôll need to <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">install</a> the Azure CLI.</li>
 </ul>
+
+<p><br /></p>
 
 <h2 id="deployment-steps">Deployment Steps</h2>
 
@@ -155,7 +158,9 @@ at the bottom of the screen</li>
 (TODO: insert screenshot here)</li>
 </ol>
 
-<h2 id="deployment---additional-configurations">Deployment - Additional Configurations</h2>
+<p><br /></p>
+
+<h2 id="deployment-additional-configurations">Deployment - Additional Configurations</h2>
 
 <h3 id="batch-job--task-timeout">Batch Job &amp; Task Timeout</h3>
 
@@ -187,9 +192,7 @@ the following section to the task.json:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="best-practices-for-dragen-on-azure">Best Practices for DRAGEN on Azure</h2>
-
-<p>Insert best practices for DRAGEN on Azure content here</p>
+<p><br /></p>
 
 <h2 id="test-the-deployment-using-the-azure-cli">Test the Deployment using the Azure CLI</h2>
 
@@ -209,7 +212,7 @@ and using the subscription in which your batch account has been provisioned.</p>
 <p>You will need to authenticate with the provisioned batch account in order to
 create jobs and tasks.</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> az batch account login <span class="nt">-n</span> &lt;batch account name&gt; <span class="nt">-g</span> &lt;resource group name&gt;
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch account login <span class="nt">-n</span> &lt;batch account name&gt; <span class="nt">-g</span> &lt;resource group name&gt;
 </code></pre></div></div>
 
 <h3 id="create-batch-job">Create Batch Job</h3>
@@ -243,34 +246,34 @@ using bash.</p>
 <ul>
   <li>REF_DIR: The directory to untar the genome hash table to.</li>
   <li>OUT_DIR: The directory to write the DRAGEN results to.</li>
-  <li>FQ1: The path to the first local FastQ file on the node.</li>
-  <li>FQ2: The path to the second local FastQ file on the node.</li>
+  <li>FQ1: The path to the first local FASTQ file on the node.</li>
+  <li>FQ2: The path to the second local FASTQ file on the node.</li>
   <li>RGID: The RGID associated with this DRAGEN run.</li>
   <li>RGSM: THE RGSM associated with this DRAGEN run.</li>
   <li>LICENSE: The DRAGEN license.</li>
 </ul>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s1">'mkdir &lt;REF_DIR&gt; &lt;OUT_DIR&gt;; \
-tar xzvf dragen.tar -C &lt;REF_DIR&gt;; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r &lt;REF_DIR&gt; \
-    -1 &lt;FQ1&gt; \
-    -2 &lt;FQ2&gt; \
-    --RGID &lt;RGID&gt; \
-    --RGSM &lt;RGSM&gt; \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory &lt;OUT_DIR&gt; \
-    --enable-variant-caller true \
-    --lic-server &lt;LICENSE&gt;
-</span></code></pre></div></div>
+<span class="s2">"mkdir &lt;REF_DIR&gt; &lt;OUT_DIR&gt;; </span><span class="se">\</span><span class="s2">
+tar xzvf dragen.tar -C &lt;REF_DIR&gt;; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen -f -r &lt;REF_DIR&gt; </span><span class="se">\</span><span class="s2">
+    -1 &lt;FQ1&gt; </span><span class="se">\</span><span class="s2">
+    -2 &lt;FQ2&gt; </span><span class="se">\</span><span class="s2">
+    --RGID &lt;RGID&gt; </span><span class="se">\</span><span class="s2">
+    --RGSM &lt;RGSM&gt; </span><span class="se">\</span><span class="s2">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
+    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
+    --enable-sort true </span><span class="se">\</span><span class="s2">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
+    --enable-map-align true </span><span class="se">\</span><span class="s2">
+    --output-format BAM </span><span class="se">\</span><span class="s2">
+    --output-directory &lt;OUT_DIR&gt; </span><span class="se">\</span><span class="s2">
+    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
+    --lic-server &lt;LICENSE&gt;"</span>
+</code></pre></div></div>
 
-<h5 id="sas">SAS</h5>
+<h4 id="sas">SAS</h4>
 
 <ul>
   <li><a href="https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas">SAS CLI Reference</a></li>
@@ -308,8 +311,8 @@ necessary, a slightly different command can be used.</p>
     <span class="nt">--expiry</span> &lt;EXPIRE_DATE&gt; <span class="se">\</span>
     <span class="nt">--permissions</span> aclrw <span class="se">\</span>
     <span class="nt">--https-only</span> <span class="se">\</span>
-    <span class="nt">--output</span> tsv<span class="o">)</span><span class="s2">"
-</span></code></pre></div></div>
+    <span class="nt">--output</span> tsv
+</code></pre></div></div>
 
 <p>In this case, the SAS token returned by the command will need to be
 appended to the container URL, for example:</p>
@@ -323,11 +326,11 @@ appended to the container URL, for example:</p>
   <li><a href="https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint">Resource Files Reference</a></li>
 </ul>
 
-<p>In this example, both the genome file and the FastQ list file need to be on the
+<p>In this example, both the genome file and the FASTQ files need to be on the
 batch node when running the batch command.  This script takes advantage of the
 <code class="language-plaintext highlighter-rouge">resourceFiles</code> configuration to facilitate this.</p>
 
-<p>If the genome tarball and FastQ files are in a private blob storage account, a
+<p>If the genome tarball and FASTQ files are in a private blob storage account, a
 SAS token will need to be generated to allow batch to download the file.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"resourceFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
@@ -433,7 +436,7 @@ with each of the sections described in detail above.</p>
 </ul>
 
 <p>With the command generated to run within the task, and accessible URLs
-generated for the genome tarball and FastQ files, the following command
+generated for the genome tarball and FASTQ files, the following command
 can be used to create the batch task.</p>
 
 <p>The below URLs must either be public, or private but made accessible
@@ -441,8 +444,8 @@ can be used to create the batch task.</p>
 
 <ul>
   <li>GENOME_URL: URL of a genome tarball.</li>
-  <li>FQ1_URL: URL of the first FastQ file.</li>
-  <li>FQ2_URL: URL of the second FastQ file.</li>
+  <li>FQ1_URL: URL of the first FASTQ file.</li>
+  <li>FQ2_URL: URL of the second FASTQ file.</li>
 </ul>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
@@ -460,24 +463,24 @@ can be used to create the batch task.</p>
 <p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s1">'mkdir dragen output; \
-tar xzvf dragen.tar -C dragen; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r dragen \
-    -1 1.fq.gz \
-    -2 2.fq.gz \
-    --RGID &lt;RGID&gt; \
-    --RGSM &lt;RGSM&gt; \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory output \
-    --enable-variant-caller true \
-    --lic-server &lt;LICENSE&gt;
-</span></code></pre></div></div>
+<span class="s2">"mkdir dragen output; </span><span class="se">\</span><span class="s2">
+tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
+    -1 1.fq.gz </span><span class="se">\</span><span class="s2">
+    -2 2.fq.gz </span><span class="se">\</span><span class="s2">
+    --RGID NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="s2">
+    --RGSM NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="s2">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
+    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
+    --enable-sort true </span><span class="se">\</span><span class="s2">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
+    --enable-map-align true </span><span class="se">\</span><span class="s2">
+    --output-format BAM </span><span class="se">\</span><span class="s2">
+    --output-directory output </span><span class="se">\</span><span class="s2">
+    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
+    --lic-server &lt;LICENSE&gt;"</span>
+</code></pre></div></div>
 
 <p>task.json</p>
 
@@ -486,13 +489,13 @@ tar xzvf dragen.tar -C dragen; \
     </span><span class="nl">"commandLine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$COMMAND"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"resourceFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
         </span><span class="nl">"filePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dragen.tar"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;Need public genome URL&gt;"</span><span class="w">
+        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38_altaware_nohla-cnv-anchored.v8.tar"</span><span class="w">
     </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"filePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.fq.gz"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;Need public fastq1 URL&gt;"</span><span class="w">
+        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R1_001.fastq.gz"</span><span class="w">
     </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"filePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.fq.gz"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;Need public fastq2 URL&gt;"</span><span class="w">
+        </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R2_001.fastq.gz"</span><span class="w">
     </span><span class="p">}],</span><span class="w">
     </span><span class="nl">"outputFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
         </span><span class="nl">"filePattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../stdout.txt"</span><span class="p">,</span><span class="w">
@@ -558,86 +561,47 @@ tar xzvf dragen.tar -C dragen; \
     <span class="nt">--json-file</span> task.json
 </code></pre></div></div>
 
-<h4 id="alternate-file-references">Alternate File References</h4>
-
-<h5 id="file-streaming">File Streaming</h5>
+<h4 id="file-streaming">File Streaming</h4>
 
 <p>While it is always necessary to have the genome file locally on the node, DRAGEN
-can stream the FastQ files for faster processing.</p>
+can stream input FASTQ files and BAMs from Azure for faster processing.</p>
 
-<h6 id="stream-from-public-url">Stream From Public URL</h6>
-
-<ul>
-  <li>FQ1_URL: The full URL to the first public FastQ file.</li>
-  <li>FQ2_URL: The full URL to the second public FastQ file.</li>
-</ul>
-
-<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s1">'mkdir dragen output; \
-tar xzvf dragen.tar -C dragen; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r dragen \
-    -1 &lt;FQ1_URL&gt; \
-    -2 &lt;FQ2_URL&gt; \
-    --RGID &lt;RGID&gt; \
-    --RGSM &lt;RGSM&gt; \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory output \
-    --enable-variant-caller true \
-    --lic-server &lt;LICENSE&gt;
-</span></code></pre></div></div>
-
-<p>In this case, the FastQ files will no longer need to be referenced in the
-resourceFiles in the task.json</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
-    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
-    <span class="nt">--json-file</span> task.json
-</code></pre></div></div>
-
-<h6 id="stream-from-azure-blob-storage">Stream from Azure Blob Storage</h6>
+<h5 id="stream-from-azure-blob-storage">Stream from Azure Blob Storage</h5>
 
 <ul>
   <li>STORAGE_ACCOUNT: The name of the blob storage account.</li>
   <li>STORAGE_ACCOUNT_KEY: An access key to the storage account.</li>
-  <li>FQ1_URL: The full URL to the first FastQ file in Azure Blob Storage.</li>
-  <li>FQ2_URL: The full URL to the second FastQ file in Azure Blob Storage.</li>
+  <li>FQ1_URL: The full URL to the first FASTQ file in Azure Blob Storage.</li>
+  <li>FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.</li>
 </ul>
 
 <p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s1">'echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; \
-echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; \
-echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; \
-echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; \
-mkdir dragen output; \
-tar xzvf dragen.tar -C dragen; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r dragen \
-    -1 &lt;FQ1_URL&gt; \
-    -2 &lt;FQ2_URL&gt; \
-    --RGID &lt;RGID&gt; \
-    --RGSM &lt;RGSM&gt; \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory output \
-    --enable-variant-caller true \
-    --lic-server &lt;LICENSE&gt;
-</span></code></pre></div></div>
+<span class="s2">"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+mkdir dragen output; </span><span class="se">\</span><span class="s2">
+tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
+    -1 &lt;FQ1_URL&gt; </span><span class="se">\</span><span class="s2">
+    -2 &lt;FQ2_URL&gt; </span><span class="se">\</span><span class="s2">
+    --RGID &lt;RGID&gt; </span><span class="se">\</span><span class="s2">
+    --RGSM &lt;RGSM&gt; </span><span class="se">\</span><span class="s2">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
+    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
+    --enable-sort true </span><span class="se">\</span><span class="s2">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
+    --enable-map-align true </span><span class="se">\</span><span class="s2">
+    --output-format BAM </span><span class="se">\</span><span class="s2">
+    --output-directory output </span><span class="se">\</span><span class="s2">
+    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
+    --lic-server &lt;LICENSE&gt;"</span>
+</code></pre></div></div>
 
-<p>In this case, the FastQ files will no longer need to be referenced in the
+<p>In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
@@ -645,10 +609,12 @@ resourceFiles in the task.json</p>
     <span class="nt">--json-file</span> task.json
 </code></pre></div></div>
 
-<h5 id="fastq-list">FastQ List</h5>
+<h5 id="fastq-list">FASTQ List</h5>
 
-<p>If using a FastQ list file to reference and stream FastQ files, the Fast list file must
-also be local to the node.  The below example shows an example of this using the
+<p>If using a FASTQ list file to reference and stream FASTQ files, the FASTQ list file must
+also be local to the node.  The FASTQ files referenced in the FASTQ list can be URLs
+to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
+The below example shows an example of this using the
 resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.</p>
 
 <p>Since we are streaming from Azure Blob Storage, we will need the <code class="language-plaintext highlighter-rouge">~/.azure-credentials</code> file
@@ -671,26 +637,26 @@ again.</p>
 <p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s1">'echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; \
-echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; \
-echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; \
-echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; \
-mkdir dragen output; \
-tar xvf dragen.tar -C dragen; \
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; \
-/opt/edico/bin/dragen -f -r dragen \
-    --fastq-list fastq_list.csv \
-    --fastq-list-sample-id &lt;RGSM&gt; \
-    --enable-bam-indexing true \
-    --enable-map-align-output true \
-    --enable-sort true \
-    --output-file-prefix dragen-batch \
-    --enable-map-align true \
-    --output-format BAM \
-    --output-directory output \
-    --enable-variant-caller true \
-    --lic-server &lt;LICENSE&gt;
-</span></code></pre></div></div>
+<span class="s2">"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
+mkdir dragen output; </span><span class="se">\</span><span class="s2">
+tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
+    --fastq-list fastq_list.csv </span><span class="se">\</span><span class="s2">
+    --fastq-list-sample-id &lt;RGSM&gt; </span><span class="se">\</span><span class="s2">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
+    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
+    --enable-sort true </span><span class="se">\</span><span class="s2">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
+    --enable-map-align true </span><span class="se">\</span><span class="s2">
+    --output-format BAM </span><span class="se">\</span><span class="s2">
+    --output-directory output </span><span class="se">\</span><span class="s2">
+    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
+    --lic-server &lt;LICENSE&gt;"</span>
+</code></pre></div></div>
 
 <p>task.json resourceFiles:</p>
 
@@ -708,17 +674,73 @@ tar xvf dragen.tar -C dragen; \
     <span class="nt">--json-file</span> task.json
 </code></pre></div></div>
 
+<h5 id="example-bash-script">Example Bash Script</h5>
+
+<p>An <a href="../docs-create-task.sh">example bash script</a> using the above commands is available for reference.
+There is a required <code class="language-plaintext highlighter-rouge">LICENSE_URL</code> environment variable, as well as some variables within the script
+that must be set before running it, ie:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LICENSE_URL</span><span class="o">=</span>https://&lt;username&gt;:&lt;password&gt;@license.edico.com ./create-batch-task.sh
+</code></pre></div></div>
+
+<p>There are accompanying comments within the bash script to help set these.</p>
+
+<p><br /></p>
+
 <h2 id="troubleshooting">Troubleshooting</h2>
 
-<p>Insert troubleshooting content here</p>
+<h3 id="arm-deployment">ARM Deployment</h3>
 
-<h2 id="faq">FAQ</h2>
+<p>If you are running into issues getting the infrastructure spun up through the
+ARM template, there are a few options for debugging:</p>
 
-<p>Insert FAQ content here</p>
+<ol>
+  <li>
+    <p>If the resource group was created, navigate to the resource group, and
+then the deployments menu option.  Here you will find the list of deployments
+tied to this resource group, and navigating deeper into each deployment
+may show additional information for the deployment of each resource.</p>
+  </li>
+  <li>
+    <p>Open the <a href="https://ms.portal.azure.com/#blade/Microsoft_Azure_ActivityLog/ActivityLogBlade">Activity Log</a>
+for an additional source of information for recent issues within your subscription.</p>
+  </li>
+</ol>
+
+<h3 id="batch-tasks">Batch Tasks</h3>
+
+<p>If you are running into issues getting your batch task to run successfully,
+the best place to get information to help debug the problem is within the
+<code class="language-plaintext highlighter-rouge">stdout</code> and <code class="language-plaintext highlighter-rouge">stderr</code> of the batch task itself.  This can be accessed by navigating
+to your batch account in the portal, and then to the specific job and task
+that ran.  Once there, you will be able to access <code class="language-plaintext highlighter-rouge">stdout.txt</code> and <code class="language-plaintext highlighter-rouge">stderr.txt</code>:</p>
+
+<p><img src="./images/batch-task-file-list.png" alt="batch-task-file-list" /></p>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li>
+    <p>Quota issues.  If quota increases haven‚Äôt been requested, it can be common
+to run into quota issues for both the number of batch accounts as well as for
+the <code class="language-plaintext highlighter-rouge">Standard NPS Family vCPUs</code>.  Please make sure you have available
+<a href="#deployment-steps">quota</a> before deploying the ARM template.</p>
+  </li>
+  <li>
+    <p>Input file streaming.  Currently, DRAGEN does not support input streaming
+from public Blob containers.  Input files from private Blob containers can be
+streamed provided that the proper storage credentials are passed to the batch
+command.</p>
+  </li>
+</ol>
+
+<p><br /></p>
 
 <h2 id="additional-resources">Additional Resources</h2>
 
 <p>Insert additional resources content here</p>
+
+<p><br /></p>
 
 <h2 id="contributing">Contributing</h2>
 
@@ -736,6 +758,8 @@ tar xvf dragen.tar -C dragen; \
 
 <p>Please open a <a href="https://github.com/Illumina/dragen-azure-quickstart/issues"><em>issue</em></a> if you would like to provide any feedback on the contents of this repository.</p>
 
+<p><br /></p>
+
 <h2 id="notices">Notices</h2>
 
 <p>This document is provided for informational purposes only. It represents Azure‚Äôs current product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of Azure‚Äôs products or services, each of which is provided ‚Äúas is‚Äù without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from Azure, its affiliates, suppliers, or licensors. The responsibilities and liabilities of Azure to its customers are controlled by Azure agreements, and this document is not part of, nor does it modify, any agreement between Azure and its customers.</p>
@@ -746,12 +770,14 @@ tar xvf dragen.tar -C dragen; \
 
 <p>Microsoft, Windows, Microsoft Azure and/or other Microsoft products and services referenced in the documentation may be either trademarks or registered trademarks of Microsoft in the United States and/or other countries. The licenses for this project do not grant you rights to use any Microsoft names, logos, or trademarks. Microsoft‚Äôs general trademark guidelines can be found at <a href="http://go.microsoft.com/fwlink/?LinkID=254653">http://go.microsoft.com/fwlink/?LinkID=254653</a>.</p>
 
+<p><br /></p>
+
+<h2 id="privacy">Privacy</h2>
+
 <p>Privacy information can be found at <a href="https://privacy.microsoft.com/en-us/">https://privacy.microsoft.com/en-us/</a></p>
 
 <p>Microsoft and any contributors reserve all others rights, whether under their respective copyrights, patents, or trademarks, whether by implication, estoppel or otherwise.</p>
 
-<h2 id="privacy">Privacy</h2>
-
-<p>Insert privacy content here</p>
+<p><br /></p>
 
 :ET
