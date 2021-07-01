@@ -1,0 +1,15 @@
+<ul>
+    {% for item in include.nav %}
+    <li>
+      {% if item.file %}
+        <a href="#{{ item.title | slugify }}">{{ item.title }}</a>
+      {% else %}
+        {{ item.title }}
+      {% endif %}
+    </li>
+
+    {% if item.subnav %}
+      {% include nav.html nav=item.subnav %}
+    {% endif %}
+    {% endfor %}
+</ul>
