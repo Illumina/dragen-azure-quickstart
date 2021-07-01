@@ -1,5 +1,3 @@
-## Deployment Steps
-
 ### Login to your Azure Portal account
 
 1. Log in to your Azure account in the [Azure Portal](https://portal.azure.com).

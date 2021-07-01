@@ -1,8 +1,6 @@
-## Test the Deployment using the Azure CLI
-
 Once your batch account infrastructure has been created, the following guide
-can be used to create batch jobs and tasks.  The following guide makes use
-of the Azure CLI.
+can be used to create batch jobs and tasks.  This guide makes use of the
+Azure CLI.
 
 ### Azure CLI Authentication
 
@@ -33,7 +31,8 @@ az batch job create --id <JOB_ID> pool-id <POOL_ID>
 
 ### Create Batch Task
 
-Once the batch job has been created, a task can be added to it.
+Once the batch job has been created, a task can be added to it.  We will
+be doing this through a task.json specification file.
 
 * JOB_ID: The same job id used when creating the batch job.
 * TASK_ID: A unique task id to assign to the task being created.
@@ -73,23 +72,13 @@ tar xzvf dragen.tar -C <REF_DIR>; \
     --lic-server <LICENSE>
 ```
 
-#### Resource Files
-
-* [Resource Files Reference](https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint)
-
-In this example, both the genome file and the FastQ list file need to be on the
-batch node when running the batch command.  This script takes advantage of the
-`--resources-files` batch task option to facilitate this.
-
-If the genome tar and FastQ files are in a private blob storage account, a
-SAS token will need to be generated to allow batch to download the file.
-
 ##### SAS
 
 * [SAS CLI Reference](https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas)
 
 The following example will generate a full URL with SAS token to access a
-file in a private blob storage account.
+file in a private blob storage account.  This is useful when wanting to
+obtain read access to a specific file in a protected storage account.
 
 * BLOB_PATH: The path to the file within the container.
 * STORAGE_ACCOUNT: The name of the blob storage account.
@@ -109,20 +98,153 @@ az storage blob generate-sas \
     --output tsv
 ```
 
+If obtaining write access to a container within a storage account is
+necessary, a slightly different command can be used.
+
+```sh
+az storage container generate-sas \
+    --name <CONTAINER_NAME> \
+    --account-name <STORAGE_ACCOUNT> \
+    --expiry <EXPIRE_DATE> \
+    --permissions aclrw \
+    --https-only \
+    --output tsv)"
+```
+
+In this case, the SAS token returned by the command will need to be
+appended to the container URL, for example:
+
+```sh
+CONTAINER_URL="https://<STORAGE_ACCOUNT>.blob.core.windows.net/<CONTAINER>?<SAS_TOKEN>
+```
+
+#### Resource Files
+
+* [Resource Files Reference](https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint)
+
+In this example, both the genome file and the FastQ list file need to be on the
+batch node when running the batch command.  This script takes advantage of the
+`resourceFiles` configuration to facilitate this.
+
+If the genome tarball and FastQ files are in a private blob storage account, a
+SAS token will need to be generated to allow batch to download the file.
+
+```json
+"resourceFiles": [{
+    "filePath": "dragen.tar",
+    "httpUrl": "$GENOME_URL"
+}, {
+    "filePath": "1.fq.gz",
+    "httpUrl": "$FQ1_URL"
+}, {
+    "filePath": "2.fq.gz",
+    "httpUrl": "$FQ2_URL"
+}]
+```
+
+#### Output Files
+
+Output files configuration tells batch tasks to write certain files to external
+locations, triggered by certain events.  We will use this feature in this example
+to get various logs and DRAGEN output out to our storage container at the end
+of the run.
+
+* CONTAINER_URL: The container url generated above with the SAS token appended to it.
+* TASK_ID: A task id, used in this case to organize the output.
+* OUT_DIR: The directory the DRAGEN results were written to.
+
+```json
+"outputFiles": [{
+    "filePattern": "../stdout.txt",
+    "destination": {
+        "container": {
+            "containerUrl": "<CONTAINER_URL>",
+            "path": "<TASK_ID>/stdout.txt"
+        }
+    },
+    "uploadOptions": {
+        "uploadCondition": "taskcompletion"
+    }
+}, {
+    "filePattern": "../stderr.txt",
+    "destination": {
+        "container": {
+            "containerUrl": "<CONTAINER_URL>",
+            "path": "<TASK_ID>/stderr.txt"
+        }
+    },
+    "uploadOptions": {
+        "uploadCondition": "taskcompletion"
+    }
+}, {
+    "filePattern": "<OUT_DIR>/**/*",
+    "destination": {
+        "container": {
+            "containerUrl": "<CONTAINER_URL>",
+            "path": "<TASK_ID>/<OUT_DIR>"
+        }
+    },
+    "uploadOptions": {
+        "uploadCondition": "taskcompletion"
+    }
+}, {
+    "filePattern": "/var/log/dragen.log",
+    "destination": {
+        "container": {
+            "containerUrl": "<CONTAINER_URL>",
+            "path": "<TASK_ID>/log/dragen.log"
+        }
+    },
+    "uploadOptions": {
+        "uploadCondition": "taskcompletion"
+    }
+}, {
+    "filePattern": "/var/log/dragen/**/*",
+    "destination": {
+        "container": {
+            "containerUrl": "<CONTAINER_URL>",
+            "path": "<TASK_ID>/log/dragen"
+        }
+    },
+    "uploadOptions": {
+        "uploadCondition": "taskcompletion"
+    }
+}]
+```
+
+#### task.json
+
+The overall structure of the task.json will look like the following,
+with each of the sections described in detail above.
+
+```json
+{
+    "id": "<TASK_ID>",
+    "commandLine": "<COMMAND>",
+    "resourcesFiles": [<RESOURCE_FILES>],
+    "outputFiles": [<OUTPUT_FILES>]
+}
+```
+
 #### Create
 
 * [Batch task create CLI reference](https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create)
 
 With the command generated to run within the task, and accessible URLs
-generated for the genome tar and FastQ files, the following command
+generated for the genome tarball and FastQ files, the following command
 can be used to create the batch task.
+
+The below URLs must either be public, or private but made accessible
+(for example, with a SAS token).
+
+* GENOME_URL: URL of a genome tarball.
+* FQ1_URL: URL of the first FastQ file.
+* FQ2_URL: URL of the second FastQ file.
 
 ```sh
 az batch task create \
     --job-id <JOB_ID> \
-    --task-id <TASK_ID> \
-    --command-line "<COMMAND>" \
-    --resource-files dragen.tar=<GENOME_URL> 1.fq.gz=<FQ1_URL> 2.fq.gz=<FQ2_URL>
+    --json-file task.json
 ```
 
 #### Working Example
@@ -143,8 +265,8 @@ tar xzvf dragen.tar -C dragen; \
 /opt/edico/bin/dragen -f -r dragen \
     -1 1.fq.gz \
     -2 2.fq.gz \
-    --RGID <RGID> \
-    --RGSM <RGSM> \
+    --RGID NA24385-AJ-Son-R1-NS_S33 \
+    --RGSM NA24385-AJ-Son-R1-NS_S33 \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
@@ -156,12 +278,85 @@ tar xzvf dragen.tar -C dragen; \
     --lic-server <LICENSE>
 ```
 
+task.json
+
+```json
+{
+    "id": "task1",
+    "commandLine": "$COMMAND",
+    "resourceFiles": [{
+        "filePath": "dragen.tar",
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38_altaware_nohla-cnv-anchored.v8.tar"
+    }, {
+        "filePath": "1.fq.gz",
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R1_001.fastq.gz"
+    }, {
+        "filePath": "2.fq.gz",
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R2_001.fastq.gz"
+    }],
+    "outputFiles": [{
+        "filePattern": "../stdout.txt",
+        "destination": {
+            "container": {
+                "containerUrl": "$CONTAINER_URL",
+                "path": "task1/stdout.txt"
+            }
+        },
+        "uploadOptions": {
+            "uploadCondition": "taskcompletion"
+        }
+    }, {
+        "filePattern": "../stderr.txt",
+        "destination": {
+            "container": {
+                "containerUrl": "$CONTAINER_URL",
+                "path": "task1/stderr.txt"
+            }
+        },
+        "uploadOptions": {
+            "uploadCondition": "taskcompletion"
+        }
+    }, {
+        "filePattern": "output/**/*",
+        "destination": {
+            "container": {
+                "containerUrl": "$CONTAINER_URL",
+                "path": "task1/output"
+            }
+        },
+        "uploadOptions": {
+            "uploadCondition": "taskcompletion"
+        }
+    }, {
+        "filePattern": "/var/log/dragen.log",
+        "destination": {
+            "container": {
+                "containerUrl": "$CONTAINER_URL",
+                "path": "task1/log/dragen.log"
+            }
+        },
+        "uploadOptions": {
+            "uploadCondition": "taskcompletion"
+        }
+    }, {
+        "filePattern": "/var/log/dragen/**/*",
+        "destination": {
+            "container": {
+                "containerUrl": "<CONTAINER_URL>",
+                "path": "task1/log/dragen"
+            }
+        },
+        "uploadOptions": {
+            "uploadCondition": "taskcompletion"
+        }
+    }]
+}
+```
+
 ```sh
 az batch task create \
     --job-id job1 \
-    --task-id task1 \
-    --command-line "<COMMAND>" \
-    --resource-files dragen.tar=<GENOME_URL> 1.fq.gz=<FQ1_URL> 2.fq.gz=<FQ2_URL>
+    --json-file task.json
 ```
 
 #### Alternate File References
@@ -199,12 +394,13 @@ tar xzvf dragen.tar -C dragen; \
     --lic-server <LICENSE>
 ```
 
+In this case, the FastQ files will no longer need to be referenced in the
+resourceFiles in the task.json
+
 ```sh
 az batch task create \
     --job-id <JOB_ID> \
-    --task-id <TASK_ID> \
-    --command-line "<COMMAND>" \
-    --resource-files dragen.tar=<GENOME_URL>
+    --json-file task.json
 ```
 
 ###### Stream from Azure Blob Storage
@@ -241,12 +437,13 @@ tar xzvf dragen.tar -C dragen; \
     --lic-server <LICENSE>
 ```
 
+In this case, the FastQ files will no longer need to be referenced in the
+resourceFiles in the task.json
+
 ```sh
 az batch task create \
     --job-id <JOB_ID> \
-    --task-id <TASK_ID> \
-    --command-line "<COMMAND>" \
-    --resource-files dragen.tar=<GENOME_URL>
+    --json-file task.json
 ```
 
 ##### FastQ List
@@ -298,10 +495,32 @@ tar xvf dragen.tar -C dragen; \
     --lic-server <LICENSE>
 ```
 
+task.json resourceFiles:
+
+```json
+"resourceFiles": [{
+    "filePath": "dragen.tar",
+    "httpUrl": "$GENOME_URL"
+}, {
+    "filePath": "fastq_list.csv",
+    "httpUrl": "$LIST_URL"
+}]
+```
+
 ```sh
 az batch task create \
     --job-id <JOB_ID> \
-    --task-id <TASK_ID> \
-    --command-line "<COMMAND>" \
-    --resource-files dragen.tar=$GENOME_URL fastq_list.csv=<LIST_URL>
+    --json-file task.json
 ```
+
+##### Example Bash Script
+
+An [example bash script](../docs-create-task.sh) using the above commands is available for reference.
+There is a required `LICENSE_URL` environment variable, as well as some variables within the script
+that must be set before running it, ie:
+
+```sh
+LICENSE_URL=https://xxxx:xxxx@license.edico.com ./create-batch-task.sh
+```
+
+There are accompanying comments within the bash script to help set these.

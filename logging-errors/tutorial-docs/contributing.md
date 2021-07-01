@@ -1,5 +1,3 @@
-## Contributing
-
 Contributions are welcome!
 
 [https://github.com/Illumina/dragen-azure-quickstart](https://github.com/Illumina/dragen-azure-quickstart)

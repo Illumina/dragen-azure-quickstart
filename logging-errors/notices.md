@@ -1,5 +1,3 @@
-## Notices
-
 This document is provided for informational purposes only. It represents Azure’s current product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of Azure’s products or services, each of which is provided “as is” without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from Azure, its affiliates, suppliers, or licensors. The responsibilities and liabilities of Azure to its customers are controlled by Azure agreements, and this document is not part of, nor does it modify, any agreement between Azure and its customers.
 
 ### Legal Notices

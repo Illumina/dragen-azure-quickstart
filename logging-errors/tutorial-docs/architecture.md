@@ -1,5 +1,3 @@
-## Architecture
-
 ### Supported Regions
 
 DRAGEN on Azure is available in regions where FPGA-enabled [Standard NP Family VMs](https://docs.microsoft.com/en-us/azure/virtual-machines/np-series) are available.  Supported regions currently include:
