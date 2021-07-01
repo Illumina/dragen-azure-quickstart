@@ -362,7 +362,8 @@ az batch task create \
 #### File Streaming
 
 While it is always necessary to have the genome file locally on the node, DRAGEN
-can stream input FASTQ files and BAMs from Azure for faster processing.
+can stream input FASTQ files and BAMs from private Azure Blob containers for faster
+processing.  DRAGEN does not currently support streaming from public Blob containers.
 
 ##### Stream from Azure Blob Storage
 

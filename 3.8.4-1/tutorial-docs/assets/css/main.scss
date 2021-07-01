@@ -3,6 +3,11 @@
 
 @import "hydeout";
 
+select {
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .home #sidebar {
     position: fixed;
     top: 0;
@@ -12,6 +17,6 @@
     }
 }
 
-.sidebar-nav-list {
+.sidebar-nav-list > .sidebar-nav-list {
     margin-left: 10px;
 }

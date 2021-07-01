@@ -1,4 +1,4 @@
-I"È◊
+I"⁄„
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -162,6 +162,19 @@ at the bottom of the screen</li>
 
 <h2 id="deployment-additional-configurations">Deployment - Additional Configurations</h2>
 
+<h3 id="using-a-new-vs-existing-storage-account">Using a New vs. Existing Storage Account</h3>
+
+<p>By default, the template deployed through this quickstart creates a new storage account and container.  If you already have data uploaded to an existing Azure Blob Storage account, it is possible to specify this as part of the deployment.</p>
+
+<p>Using the portal UI, in the ‚ÄúStorage Settings‚Äù tab, under the dropdown for ‚ÄúStorage account‚Äù simply select the name of your existing storage account.</p>
+
+<p>If deploying the ARM template manually via some other means, include the following in your input parameters to the template:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">storageNewOrExisting: existing</code></li>
+  <li><code class="language-plaintext highlighter-rouge">storageAccountName: &lt;name of your existing storage account&gt;</code></li>
+</ul>
+
 <h3 id="batch-job--task-timeout">Batch Job &amp; Task Timeout</h3>
 
 <p>It is possible to set a max run time on either the batch job or batch task.</p>
@@ -191,6 +204,37 @@ the following section to the task.json:</p>
     </span><span class="nl">"maxWallClockTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT360M"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h3 id="advanced-usage-arm-template">Advanced Usage: ARM Template</h3>
+
+<p>Incorporating DRAGEN on Azure into an existing solution may be as easy as using the <a href="https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/3.8.4-1/mainTemplate.json">ARM template</a> that is exported alongside this documentation.</p>
+
+<p>Download the <a href="https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/3.8.4-1/mainTemplate.json">template</a> and run the following commands to deploy.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">RESOURCE_GROUP</span><span class="o">=</span><span class="s2">"dragen"</span>
+
+az group create <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP</span><span class="s2">"</span> <span class="nt">-l</span> <span class="s2">"EastUS"</span>
+
+az deployment group create <span class="se">\</span>
+    <span class="nt">-g</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-p</span> <span class="nv">prefix</span><span class="o">=</span>fpgaci <span class="se">\</span>
+    <span class="nt">-p</span> <span class="nv">azureBatchServiceOid</span><span class="o">=</span>795cc567-16b1-4904-9344-afc876387199 <span class="se">\</span>
+    <span class="nt">-f</span> mainTemplate.json <span class="se">\</span>
+    <span class="nt">--query</span> <span class="s2">"properties.outputs"</span>
+</code></pre></div></div>
+
+<h3 id="other-deployment-considerations">Other Deployment Considerations</h3>
+
+<p>After deploying DRAGEN on Azure, users will want to take into account the following additional deployment considerations and options, which are <em>not</em> included as part of this quickstart template:</p>
+
+<ul>
+  <li>Compliance</li>
+  <li>Authentication</li>
+  <li>Security</li>
+  <li>Monitoring and Observability</li>
+</ul>
+
+<p>Decisions regarding implementation of any of the above are left to the end user‚Äôs discretion.</p>
 
 <p><br /></p>
 
@@ -564,7 +608,8 @@ tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
 <h4 id="file-streaming">File Streaming</h4>
 
 <p>While it is always necessary to have the genome file locally on the node, DRAGEN
-can stream input FASTQ files and BAMs from Azure for faster processing.</p>
+can stream input FASTQ files and BAMs from private Azure Blob containers for faster
+processing.  DRAGEN does not currently support streaming from public Blob containers.</p>
 
 <h5 id="stream-from-azure-blob-storage">Stream from Azure Blob Storage</h5>
 

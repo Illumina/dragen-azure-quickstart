@@ -430,10 +430,12 @@ button.disqus-load { margin-top: 1em; }
 
 .back-link a svg { fill: currentColor; }
 
+select { padding: 5px; border-radius: 5px; }
+
 .home #sidebar { position: fixed; top: 0; }
 
 .home #sidebar .site-title { font-size: 2.0rem; }
 
-.sidebar-nav-list { margin-left: 10px; }
+.sidebar-nav-list > .sidebar-nav-list { margin-left: 10px; }
 
 /*# sourceMappingURL=main.css.map */
