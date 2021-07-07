@@ -1,6 +1,6 @@
 {% for item in include.nav %}
-{% if item.file %}
 <h2 id="{{ item.title | slugify }}">{{ item.title }}</h2>
+{% if item.file %}
 
 {% include_relative {{ item.file }} %}
 {% endif %}

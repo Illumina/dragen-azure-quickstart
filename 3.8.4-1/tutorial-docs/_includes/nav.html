@@ -1,10 +1,7 @@
 <div class="sidebar-nav-list">
     {% for item in include.nav %}
-      {% if item.file %}
-      <a href="#{{ item.title | slugify }}">{{ item.title }}</a><br />
-      {% else %}
-        {{ item.title }}<br />
-      {% endif %}
+    <a href="#{{ item.title | slugify }}">{{ item.title }}</a>
+    <br />
 
     {% if item.subnav %}
       {% include nav.html nav=item.subnav %}

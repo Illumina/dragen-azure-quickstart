@@ -430,12 +430,22 @@ button.disqus-load { margin-top: 1em; }
 
 .back-link a svg { fill: currentColor; }
 
-select { padding: 5px; border-radius: 5px; }
+select { padding: 5px; border-radius: 5px; margin-bottom: 20px; width: 100%; margin-left: 1.3em; }
 
 .home #sidebar { position: fixed; top: 0; }
 
-.home #sidebar .site-title { font-size: 2.0rem; }
+.home #sidebar .site-title { font-size: 4.0rem; }
+
+.home #sidebar .icon-dragen-text { font-size: 1.299em; }
+
+.home #sidebar .lead { font-size: 1.5em; }
 
 .sidebar-nav-list > .sidebar-nav-list { margin-left: 10px; }
+
+li > ul { margin-bottom: 0; }
+
+.spacer { text-align: center; font-size: 0.3em; display: block; margin: 0.35em; color: #444; }
+
+@media (max-width: 768px) { .home #sidebar { display: none; } #page-header { margin: 10px auto; } }
 
 /*# sourceMappingURL=main.css.map */

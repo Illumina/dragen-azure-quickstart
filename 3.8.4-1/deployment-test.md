@@ -43,6 +43,11 @@ The command passed to the batch task is what will run once the batch task
 starts.  The following is an example that will run a series of commands
 using bash.
 
+This example executes the command with bash to take advantage of bash
+commands, as well as make sure
+[environment variables](https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables#environment-variable-visibility)
+are available.
+
 * REF_DIR: The directory to untar the genome hash table to.
 * OUT_DIR: The directory to write the DRAGEN results to.
 * FQ1: The path to the first local FASTQ file on the node.
@@ -73,8 +78,6 @@ tar xzvf dragen.tar -C <REF_DIR>; \
 ```
 
 #### SAS
-
-* [SAS CLI Reference](https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas)
 
 The following example will generate a full URL with SAS token to access a
 file in a private blob storage account.  This is useful when wanting to
@@ -118,16 +121,16 @@ appended to the container URL, for example:
 CONTAINER_URL="https://<STORAGE_ACCOUNT>.blob.core.windows.net/<CONTAINER>?<SAS_TOKEN>
 ```
 
-#### Resource Files
+* [SAS CLI Reference](https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas)
 
-* [Resource Files Reference](https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint)
+#### Resource Files
 
 In this example, both the genome file and the FASTQ files need to be on the
 batch node when running the batch command.  This script takes advantage of the
 `resourceFiles` configuration to facilitate this.
 
 If the genome tarball and FASTQ files are in a private blob storage account, a
-SAS token will need to be generated to allow batch to download the file.
+[SAS token](#sas) will need to be generated to allow batch to download the file.
 
 ```json
 "resourceFiles": [{
@@ -141,6 +144,8 @@ SAS token will need to be generated to allow batch to download the file.
     "httpUrl": "$FQ2_URL"
 }]
 ```
+
+* [Resource Files Reference](https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint)
 
 #### Output Files
 
@@ -228,8 +233,6 @@ with each of the sections described in detail above.
 
 #### Create
 
-* [Batch task create CLI reference](https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create)
-
 With the command generated to run within the task, and accessible URLs
 generated for the genome tarball and FASTQ files, the following command
 can be used to create the batch task.
@@ -247,9 +250,9 @@ az batch task create \
     --json-file task.json
 ```
 
-#### Working Example
+* [Batch task create CLI reference](https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create)
 
-TODO: Fill in public genome url, fastq urls, and associated RGID and RGSM
+#### Working Example
 
 ```sh
 az batch job create --id job1 pool-id mypool
@@ -479,7 +482,7 @@ az batch task create \
 
 ##### Example Bash Script
 
-An [example bash script](../docs-create-task.sh) using the above commands is available for reference.
+An [example bash script](../create-batch-task.sh) using the above commands is available for reference.
 There is a required `LICENSE_URL` environment variable, as well as some variables within the script
 that must be set before running it, ie:
 

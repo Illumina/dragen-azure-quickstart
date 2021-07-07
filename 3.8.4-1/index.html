@@ -11,7 +11,7 @@
   
     <title>
       
-        Illumina DRAGEN on Azure &middot; DRAGEN on Azure - Quick start
+        Illumina DRAGEN on Azure &middot; DRAGEN on Azure
       
     </title>
   
@@ -20,6 +20,7 @@
   
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/icons.css" />
     
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface" />
@@ -38,16 +39,18 @@
   <body class="page home">
 
     <div id="sidebar">
-    <header>
-      <div class="site-title">
-        <a href="/">
-          
-          DRAGEN on Azure - Quick start
-        </a>
-      </div>
-      <p class="lead">DRAGEN on Azure</p>
-    </header>
-    <nav id="sidebar-nav-links">
+  <header>
+    <div class="site-title">
+      <a href="/">
+        
+      </a>
+      <span class="icon-dragen-text"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span></span><br/>
+      <span class="icon-plus spacer"></span>
+      <span class="icon-ms-azure"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+    </div>
+    <p class="lead">Quickstart</p>
+  </header>
+  <nav id="sidebar-nav-links">
   
   
 
@@ -84,69 +87,68 @@
   <div id="version-nav"></div>
 <div class="sidebar-nav-list">
     
-      
-      <a href="#introduction">Introduction</a><br />
-      
+    <a href="#introduction">Introduction</a>
+    <br />
 
     
     
-      
-      <a href="#architecture">Architecture</a><br />
-      
+    <a href="#architecture">Architecture</a>
+    <br />
 
     
     
-      
-      <a href="#prerequisites">Prerequisites</a><br />
-      
+    <a href="#prerequisites">Prerequisites</a>
+    <br />
 
     
     
-      
-      <a href="#deployment-steps">Deployment Steps</a><br />
-      
+    <a href="#deployment">Deployment</a>
+    <br />
+
+    
+      <div class="sidebar-nav-list">
+    
+    <a href="#steps">Steps</a>
+    <br />
 
     
     
-      
-      <a href="#deployment-additional-configurations">Deployment - Additional Configurations</a><br />
-      
+    <a href="#additional-configurations">Additional Configurations</a>
+    <br />
 
     
     
-      
-      <a href="#test-the-deployment-using-the-azure-cli">Test the Deployment using the Azure CLI</a><br />
-      
+    <a href="#testing-using-the-azure-cli">Testing using the Azure CLI</a>
+    <br />
 
     
     
-      
-      <a href="#troubleshooting">Troubleshooting</a><br />
-      
+</div>
 
     
     
-      
-      <a href="#additional-resources">Additional Resources</a><br />
-      
+    <a href="#troubleshooting">Troubleshooting</a>
+    <br />
 
     
     
-      
-      <a href="#contributing">Contributing</a><br />
-      
+    <a href="#additional-resources">Additional Resources</a>
+    <br />
 
     
     
-      
-      <a href="#notices">Notices</a><br />
-      
+    <a href="#contributing">Contributing</a>
+    <br />
 
     
     
-      
-      <a href="#privacy">Privacy</a><br />
-      
+    <a href="#notices">Notices</a>
+    <br />
+
+    
+    
+    <a href="#privacy">Privacy</a>
+    <br />
 
     
     
@@ -154,12 +156,53 @@
 
 </nav>
 
+
   
-    
-  </div>
+</div>
+<script>
+  // Give some wiggle room at the top/bottom page
+  // when triggering active sections
+  let threshold;
+  window.addEventListener('resize', function(){
+    threshold = window.innerHeight / 3;
+  });
+
+  const navList = document.querySelectorAll('.sidebar-nav-list a');
+  window.addEventListener('scroll', function() {
+    let current = navList[0];
+
+    navList.forEach(function(navItem){
+      // Remove active class from all navItems
+      navItem.classList.remove('active');
+
+      const sectionItem = document.querySelector(navItem.getAttribute('href')),
+            headerLocation = navItem.offsetTop;
+      
+      // If sectionItem is scrolled into view + threshold
+      if (pageYOffset + threshold > sectionItem.offsetTop) {
+        current = navItem;
+      }        
+    });
+
+    if (pageYOffset + window.innerHeight + threshold < document.body.clientHeight) {
+      // We are not at the bottom, mark current navItem active
+      current.classList.add('active');
+    } else {
+      // We are at the bottom, assign active to last element
+      // otherwise we would never mark active on the final navItem
+      navList[navList.length-1].classList.add('active');
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event('scroll'));
+  });
+</script>
+
 
     <main class="container">
-      <header>
+      <header id="page-header">
   
 
 
@@ -171,9 +214,15 @@
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
 
-<p>This tutorial and its associated Marketplace solution in Azure (TODO: Do we want to link directly to this?) were developed by Illumina in collaboration with Microsoft.  The reference deployment described below serves as a starting point, but can be further customized to meet your needs.</p>
+<p><em>Note: DRAGEN currently exists as a private offering in the Azure Marketplace.  If you would like to gain access, please contact Illumina at techsupport@illumina.com.</em></p>
 
-<p>If you run into any issues while going through the tutorial, please <a href="#feedback-and-contributing">share your feedback with us</a>!</p>
+<p>This tutorial and its associated Marketplace solution in Azure were developed by Illumina in collaboration with Microsoft.  The reference deployment described below serves as a starting point, but can be further customized to meet your needs.</p>
+
+<p>If you run into any issues while going through the tutorial, please <a href="#contributing">share your feedback with us</a>!</p>
+
+<ul>
+  <li><a href="mainTemplate.json">DRAGEN Infrastructure ARM Template</a></li>
+</ul>
 
 <p><br /></p>
 
@@ -181,7 +230,7 @@
 
 <h3 id="supported-regions">Supported Regions</h3>
 
-<p>DRAGEN on Azure is available in regions where FPGA-enabled <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">Standard NP Family VMs</a> are available.  Supported regions currently include:</p>
+<p>DRAGEN on Azure is available in regions where FPGA-enabled <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">Standard NP Family VMs</a> are available.  At the time of this writing, supported regions currently include:</p>
 
 <ul>
   <li>West US 2</li>
@@ -189,6 +238,8 @@
   <li>Southeast Asia (Singapore)</li>
   <li>West Europe (Amsterdam)</li>
 </ul>
+
+<p>For the most current information on available regions, see the NP-series row of the chart <a href="https://azure.microsoft.com/en-us/global-infrastructure/services/?products=virtual-machines">here</a>.</p>
 
 <h3 id="architecture-diagram">Architecture Diagram</h3>
 
@@ -199,49 +250,42 @@
 <p>List of Azure resources that are deployed by this quickstart if default settings and parameters are used:</p>
 
 <ul>
-  <li>Blob Storage account for input and output data
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/storage/blobs/">Blob Storage Account</a> for input and output data
     <ul>
       <li>Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations</li>
+      <li><a href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction#containers">Blob Storage Container</a></li>
     </ul>
   </li>
-  <li>Azure Batch account for managing and scheduling DRAGEN jobs</li>
-  <li>User Subscription node pool backed by one <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series VM</a> (fixed scale)</li>
-  <li>Key Vault for batch service auth to User Subscription job pool VMs
+  <li><a href="https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview">Azure Batch Account</a> for managing and scheduling DRAGEN jobs</li>
+  <li>User Subscription <a href="(https://docs.microsoft.com/en-us/azure/batch/nodes-and-pools)">node pool</a> backed by one <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series VM</a> (fixed scale)</li>
+  <li><a href="https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts">Key Vault</a> for batch service auth to User Subscription job pool VMs
     <ul>
       <li>Note: Batch service handles auth automatically, so users do not need to take any further action after the Key Vault is created.</li>
     </ul>
   </li>
 </ul>
 
-<h3 id="quota-increases">Quota Increases</h3>
-
-<h4 id="np-series-vms">NP-Series VMs</h4>
-
-<p>DRAGEN runs on FPGA-enabled VMs, which are now generally available as the NP-series on Azure.  In order to enable access to these VM SKUs by Batch service, users will need to contact support to request a quota.  This applies to both user subscription and batch managed job pools.</p>
-
-<p>All users who deploy DRAGEN through Batch service will need to request a quota for the NP-series VM SKU by submitting a support request.  In your Batch account in the Azure portal, go to the “Quotas” tab and use the button labeled “Request quota increase” to start a new request.</p>
-
-<h4 id="batch-accounts">Batch Accounts</h4>
-
-<p>Depending on the user’s workflow, it may also be necessary to request an increase in quota for Batch accounts.  Current default quotas for Batch accounts can be found <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#resource-quotas">here</a>.</p>
-
-<p>If you need to increase your Batch account quota, see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#increase-a-quota">this page</a> for more information on creating a support request.</p>
-
 <h3 id="note-on-batch-node-pool-allocation">Note on Batch Node Pool Allocation</h3>
 
 <p>Batch offers two options for allocation of node pools: Batch managed and user subscription modes.</p>
 
-<h4 id="batch-managed-node-pools">Batch Managed Node Pools</h4>
+<p>Due to the fact that DRAGEN is currently a private marketplace offering in Azure, users must configure their Batch node pool allocation to User Subscription mode.</p>
 
-<p>When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD.</p>
+<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
+
+#### Batch Managed Node Pools
+
+When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD. -->
 
 <h4 id="user-subscription-node-pools">User Subscription Node Pools</h4>
 
 <p>When the User Subscription allocation mode is selected, users request an overall quota for NP VMs for a region within their subscription.  With this model, the VMs needed for the Batch account are created directly in the user’s subscription.  This setup is useful for CI/CD and other cases where users are running DRAGEN across many Batch accounts within a subscription and/or the Batch accounts are short-lived.</p>
 
-<h4 id="cost-differences-in-node-pool-allocation-modes">Cost Differences in Node Pool Allocation Modes</h4>
+<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
 
-<p>There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs.</p>
+#### Cost Differences in Node Pool Allocation Modes
+
+There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs. -->
 
 <h3 id="azure-costs">Azure Costs</h3>
 
@@ -279,24 +323,56 @@
 
 <ul>
   <li><strong>Azure Subscription.</strong> An Azure Cloud Subscription.</li>
-  <li><strong>Quota for FPGA-enabled Virtual Machines.</strong> You will need to request a quota
+  <li><strong>Quota for NP-Series Virtual Machines.</strong> You will need to request a quota
 for vCPU cores for the NP-series of virtual machines on Azure.</li>
+  <li><strong>Azure CLI.</strong> You’ll need to <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">install</a> the Azure CLI.</li>
   <li><strong>Genomic Data.</strong> This quick start will create (if it does not already exist) an
 Azure Blob Storage Account. You will need to upload your genomics data to this
-storage account to test.</li>
-  <li><strong>Azure CLI.</strong> You’ll need to <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">install</a> the Azure CLI.</li>
+storage account to utilize DRAGEN.</li>
 </ul>
+
+<h3 id="quota-requirements">Quota Requirements</h3>
+
+<p>DRAGEN runs on a specific Virtual Machine SKU family in Azure, because it requires
+<strong>field-programmable gate array</strong> (FPGA) hardware.  Due to this requirement, you
+will need to request access to this Virtual Machine SKU family, as described below.</p>
+
+<h4 id="np-series-vms">NP-Series VMs</h4>
+
+<p>DRAGEN runs on FPGA-enabled VMs, which are now generally available as the <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series</a> on Azure.</p>
+
+<blockquote>
+  <p>Currently, the vCPU requirements for NP-series SKUs are in increments of 10. When requesting an updated quota, we recommend requesting vCPUs in batches of 10. You will need a minimum increase of 10 vCPU Quota for NP-series machines for this tutorial.</p>
+</blockquote>
+
+<p>For steps to increase or verify your NP-series vCPU quota on Azure, follow <a href="#login-to-your-azure-portal-account">this deployment step</a>.</p>
+
+<h4 id="batch-accounts">Batch Accounts</h4>
+
+<p>This quickstart will utilize <a href="https://azure.microsoft.com/en-us/services/batch/">Azure Batch</a> as the computing environment for DRAGEN, in <a href="https://docs.microsoft.com/en-us/azure/batch/scripts/batch-cli-sample-create-user-subscription-account">user subscription mode</a>.</p>
+
+<p>It is also possible to run Azure Batch in <strong>Batch service allocation mode</strong>. In Batch service allocation mode, compute nodes are subject to a separate quota. For DRAGEN, in Batch service allocation mode, you will need to request additional quota for NP-series vCPUs for your discrete Azure Batch account. Current default quotas for Batch accounts can be found <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#resource-quotas">here</a>. You can increase your Azure Batch account quota by <a href="https://docs.microsoft.com/en-us/azure/batch/batch-quota-limit#increase-a-quota">following the steps here</a>.</p>
+
+<h4 id="required-permissions-authorization--access-controls">Required Permissions (Authorization / Access Controls)</h4>
+
+<p>To provision this solution, the Active Directory principal (account, service principal, etc.) should require at least Azure subscription-wide <a href="https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#contributor">contributor access</a>.</p>
+
+<p>If your organization is concerned about this level of access, a deployment pipeline (e.g., GitHub Actions) running as a managed service principal with <strong><em>contributor</em></strong> access can allow others to have a more restricted privilege level (e.g., Resource Group Contributor, Subscription Reader).</p>
+
+<p>When utilizing a User Subscription Mode Batch Account, the Azure Batch Service must be added to the Azure Subscription as a Contributor. To add this level of access, you must be at least a Subscription Contributor. For more see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal#additional-configuration-for-user-subscription-mode">additional configuration for user subscription mode</a>.</p>
 
 <p><br /></p>
 
-<h2 id="deployment-steps">Deployment Steps</h2>
+<h2 id="deployment">Deployment</h2>
+
+<h2 id="steps">Steps</h2>
 
 <h3 id="login-to-your-azure-portal-account">Login to your Azure Portal account</h3>
 
 <ol>
   <li>Log in to your Azure account in the <a href="https://portal.azure.com">Azure Portal</a>.</li>
   <li>
-    <p>Ensure you have Quota for FPGA-enabled Virtual Machines, as outlined in the
+    <p>Ensure you have Quota for NP-series Virtual Machines, as outlined in the
 pre-requisites section above, by navigating to:</p>
 
     <ul>
@@ -323,55 +399,12 @@ Now”</li>
 solution to deploy. Once you’ve made your selections, click <strong>Review + Create</strong>
 at the bottom of the screen</li>
   <li>You can check deployment status in the top right of the Azure Portal page.
-(TODO: insert screenshot here)</li>
+<img src="./images/deployment-status.png" alt="deployment-status" /></li>
 </ol>
 
 <p><br /></p>
 
-<h2 id="deployment-additional-configurations">Deployment - Additional Configurations</h2>
-
-<h3 id="using-a-new-vs-existing-storage-account">Using a New vs. Existing Storage Account</h3>
-
-<p>By default, the template deployed through this quickstart creates a new storage account and container.  If you already have data uploaded to an existing Azure Blob Storage account, it is possible to specify this as part of the deployment.</p>
-
-<p>Using the portal UI, in the “Storage Settings” tab, under the dropdown for “Storage account” simply select the name of your existing storage account.</p>
-
-<p>If deploying the ARM template manually via some other means, include the following in your input parameters to the template:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">storageNewOrExisting: existing</code></li>
-  <li><code class="language-plaintext highlighter-rouge">storageAccountName: &lt;name of your existing storage account&gt;</code></li>
-</ul>
-
-<h3 id="batch-job--task-timeout">Batch Job &amp; Task Timeout</h3>
-
-<p>It is possible to set a max run time on either the batch job or batch task.</p>
-
-<p><a href="https://docs.microsoft.com/en-us/cli/azure/batch/job?view=azure-cli-latest#az_batch_job_set">Batch job set CLI reference</a></p>
-
-<p>The below command will terminate the batch job as well as all tasks within
-it after the job has been present for 360 minutes.</p>
-
-<ul>
-  <li>JOB_ID: The job id of the already created job.</li>
-  <li>PT360M: An ISO-8601 duration, PT360M = 360 minutes.</li>
-</ul>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job <span class="nb">set</span> <span class="se">\</span>
-    <span class="nt">--job-id</span> <span class="nv">$JOB_ID</span> <span class="se">\</span>
-    <span class="nt">--on-all-tasks-complete</span> <span class="s2">"terminatejob"</span> <span class="se">\</span>
-    <span class="nt">--job-max-wall-clock-time</span> <span class="s2">"PT360M"</span>
-</code></pre></div></div>
-
-<p><a href="https://docs.microsoft.com/en-us/rest/api/batchservice/task/add#taskconstraints">Task constraints CLI reference</a></p>
-
-<p>If you would like to set a max run time on the batch task instead, you can add
-the following section to the task.json:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"maxWallClockTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT360M"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h2 id="additional-configurations">Additional Configurations</h2>
 
 <h3 id="advanced-usage-arm-template">Advanced Usage: ARM Template</h3>
 
@@ -391,6 +424,49 @@ az deployment group create <span class="se">\</span>
     <span class="nt">--query</span> <span class="s2">"properties.outputs"</span>
 </code></pre></div></div>
 
+<p>Deployment using the ARM template enables several more advanced scenarios, such as:</p>
+
+<ul>
+  <li>Incorporation of infrastructure components needed for DRAGEN into an existing infrastructure</li>
+  <li>Automated deployments via CI/CD pipelines</li>
+  <li>Customization of the deployment to meet your needs</li>
+</ul>
+
+<h4 id="using-a-new-vs-existing-storage-account">Using a New vs. Existing Storage Account</h4>
+
+<p>By default, the ARM template included with this quickstart creates a new storage account and container.  Some users may already have data uploaded to an existing Azure Blob Storage account.  To use existing storage, specify the following input parameters to the ARM template in your deployment:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">storageNewOrExisting: existing</code></li>
+  <li><code class="language-plaintext highlighter-rouge">storageAccountName: &lt;name of your existing storage account&gt;</code></li>
+</ul>
+
+<h3 id="batch-job--task-timeout">Batch Job &amp; Task Timeout</h3>
+
+<p>It is possible to set a max run time on either the batch job or batch task.</p>
+
+<p>The below command will terminate the batch job as well as all tasks within
+it after the job has been present for 360 minutes.</p>
+
+<ul>
+  <li>JOB_ID: The job id of the already created job.</li>
+  <li>PT360M: An ISO-8601 duration, PT360M = 360 minutes.</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job <span class="nb">set</span> <span class="se">\</span>
+    <span class="nt">--job-id</span> <span class="nv">$JOB_ID</span> <span class="se">\</span>
+    <span class="nt">--on-all-tasks-complete</span> <span class="s2">"terminatejob"</span> <span class="se">\</span>
+    <span class="nt">--job-max-wall-clock-time</span> <span class="s2">"PT360M"</span>
+</code></pre></div></div>
+
+<p>If you would like to set a max run time on the batch task instead, you can add
+the following section to the task.json:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"maxWallClockTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT360M"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="other-deployment-considerations">Other Deployment Considerations</h3>
 
 <p>After deploying DRAGEN on Azure, users will want to take into account the following additional deployment considerations and options, which are <em>not</em> included as part of this quickstart template:</p>
@@ -406,7 +482,7 @@ az deployment group create <span class="se">\</span>
 
 <p><br /></p>
 
-<h2 id="test-the-deployment-using-the-azure-cli">Test the Deployment using the Azure CLI</h2>
+<h2 id="testing-using-the-azure-cli">Testing using the Azure CLI</h2>
 
 <p>Once your batch account infrastructure has been created, the following guide
 can be used to create batch jobs and tasks.  This guide makes use of the
@@ -455,6 +531,11 @@ be doing this through a task.json specification file.</p>
 starts.  The following is an example that will run a series of commands
 using bash.</p>
 
+<p>This example executes the command with bash to take advantage of bash
+commands, as well as make sure
+<a href="https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables#environment-variable-visibility">environment variables</a>
+are available.</p>
+
 <ul>
   <li>REF_DIR: The directory to untar the genome hash table to.</li>
   <li>OUT_DIR: The directory to write the DRAGEN results to.</li>
@@ -486,10 +567,6 @@ tar xzvf dragen.tar -C &lt;REF_DIR&gt;; </span><span class="se">\</span><span cl
 </code></pre></div></div>
 
 <h4 id="sas">SAS</h4>
-
-<ul>
-  <li><a href="https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas">SAS CLI Reference</a></li>
-</ul>
 
 <p>The following example will generate a full URL with SAS token to access a
 file in a private blob storage account.  This is useful when wanting to
@@ -532,18 +609,18 @@ appended to the container URL, for example:</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CONTAINER_URL</span><span class="o">=</span><span class="s2">"https://&lt;STORAGE_ACCOUNT&gt;.blob.core.windows.net/&lt;CONTAINER&gt;?&lt;SAS_TOKEN&gt;
 </span></code></pre></div></div>
 
-<h4 id="resource-files">Resource Files</h4>
-
 <ul>
-  <li><a href="https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint">Resource Files Reference</a></li>
+  <li><a href="https://docs.microsoft.com/en-us/cli/azure/storage/blob?view=azure-cli-latest#az_storage_blob_generate_sas">SAS CLI Reference</a></li>
 </ul>
+
+<h4 id="resource-files">Resource Files</h4>
 
 <p>In this example, both the genome file and the FASTQ files need to be on the
 batch node when running the batch command.  This script takes advantage of the
 <code class="language-plaintext highlighter-rouge">resourceFiles</code> configuration to facilitate this.</p>
 
 <p>If the genome tarball and FASTQ files are in a private blob storage account, a
-SAS token will need to be generated to allow batch to download the file.</p>
+<a href="#sas">SAS token</a> will need to be generated to allow batch to download the file.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"resourceFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
     </span><span class="nl">"filePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dragen.tar"</span><span class="p">,</span><span class="w">
@@ -556,6 +633,10 @@ SAS token will need to be generated to allow batch to download the file.</p>
     </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$FQ2_URL"</span><span class="w">
 </span><span class="p">}]</span><span class="w">
 </span></code></pre></div></div>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/en-us/azure/batch/resource-files#single-resource-file-from-web-endpoint">Resource Files Reference</a></li>
+</ul>
 
 <h4 id="output-files">Output Files</h4>
 
@@ -643,10 +724,6 @@ with each of the sections described in detail above.</p>
 
 <h4 id="create">Create</h4>
 
-<ul>
-  <li><a href="https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create">Batch task create CLI reference</a></li>
-</ul>
-
 <p>With the command generated to run within the task, and accessible URLs
 generated for the genome tarball and FASTQ files, the following command
 can be used to create the batch task.</p>
@@ -665,9 +742,11 @@ can be used to create the batch task.</p>
     <span class="nt">--json-file</span> task.json
 </code></pre></div></div>
 
-<h4 id="working-example">Working Example</h4>
+<ul>
+  <li><a href="https://docs.microsoft.com/en-us/cli/azure/batch/task?view=azure-cli-latest#az_batch_task_create">Batch task create CLI reference</a></li>
+</ul>
 
-<p>TODO: Fill in public genome url, fastq urls, and associated RGID and RGSM</p>
+<h4 id="working-example">Working Example</h4>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> job1 pool-id mypool
 </code></pre></div></div>
@@ -889,7 +968,7 @@ tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
 
 <h5 id="example-bash-script">Example Bash Script</h5>
 
-<p>An <a href="../docs-create-task.sh">example bash script</a> using the above commands is available for reference.
+<p>An <a href="../create-batch-task.sh">example bash script</a> using the above commands is available for reference.
 There is a required <code class="language-plaintext highlighter-rouge">LICENSE_URL</code> environment variable, as well as some variables within the script
 that must be set before running it, ie:</p>
 
@@ -897,6 +976,8 @@ that must be set before running it, ie:</p>
 </code></pre></div></div>
 
 <p>There are accompanying comments within the bash script to help set these.</p>
+
+<p><br /></p>
 
 <p><br /></p>
 
@@ -951,7 +1032,10 @@ command.</p>
 
 <h2 id="additional-resources">Additional Resources</h2>
 
-<p>Insert additional resources content here</p>
+<ul>
+  <li><a href="mainTemplate.json">DRAGEN Infrastructure ARM Template</a></li>
+  <li><a href="https://support.illumina.com/downloads/illumina-dragen-bio-it-platform-user-guide.html">DRAGEN User Guide</a></li>
+</ul>
 
 <p><br /></p>
 

@@ -1,7 +1,7 @@
 ### Login to your Azure Portal account
 
 1. Log in to your Azure account in the [Azure Portal](https://portal.azure.com).
-1. Ensure you have Quota for FPGA-enabled Virtual Machines, as outlined in the
+1. Ensure you have Quota for NP-series Virtual Machines, as outlined in the
    pre-requisites section above, by navigating to:
 
    * Subscriptions -> Choose your subscription
@@ -20,4 +20,4 @@
    solution to deploy. Once you've made your selections, click **Review + Create**
    at the bottom of the screen
 1. You can check deployment status in the top right of the Azure Portal page.
-   (TODO: insert screenshot here)
+   ![deployment-status](./images/deployment-status.png)
