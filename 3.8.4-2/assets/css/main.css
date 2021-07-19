@@ -446,6 +446,8 @@ li > ul { margin-bottom: 0; }
 
 .spacer { text-align: center; font-size: 0.3em; display: block; margin: 0.35em; color: #444; }
 
-@media (max-width: 768px) { .home #sidebar { display: none; } #page-header { margin: 10px auto; } }
+.mobile-header { display: none; }
+
+@media (max-width: 768px) { .home #sidebar { display: none; } .mobile-header { display: block; } .mobile-header .logo { text-align: center; font-size: 6.0rem; } #page-header { margin: 10px auto; } }
 
 /*# sourceMappingURL=main.css.map */

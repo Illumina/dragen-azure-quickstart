@@ -1,5 +1,5 @@
 * **A DRAGEN License** - Contact Illumina.
-* **Access to DRAGEN Image via Azure Marketplace** - Contact Illumina.
+* **Access to DRAGEN Image via Azure Marketplace** - If you would like to gain access, please contact Illumina at techsupport@illumina.com.
 
 ### Technical Requirements
 

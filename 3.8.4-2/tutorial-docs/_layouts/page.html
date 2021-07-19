@@ -6,6 +6,14 @@ layout: default
   <h1 class="page-title">{{ page.title }}</h1>
 </header>
 <div class="content">
+    <div class="mobile-header">
+        <div class="logo">
+          <span class="icon-dragen-text"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span></span><br/>
+          <span class="icon-plus spacer"></span>
+          <span class="icon-ms-azure"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+        </div>
+        <div class="version-nav"></div>
+    </div>
   {{ content }}
 </div>
 {% include back-link.html %}
@@ -23,11 +31,12 @@ layout: default
                 if (v.version == THIS_VERSION) select += ' selected';
                 select += '>'+v.version;
                 if (v.latest) select += ' (★ Latest)';
-                select += '</option>'; 
+                select += '</option>';
             });
             select += '</select>';
-            var nav = document.querySelector('#version-nav');
-            nav.innerHTML = select;
+            document.querySelectorAll('.version-nav').forEach(function(nav) {
+              nav.innerHTML = select;
+            });
           });
         } else {
           console.log('ERROR', response);

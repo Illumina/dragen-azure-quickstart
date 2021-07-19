@@ -44,10 +44,21 @@ li > ul {
     color: #444;
 }
 
+.mobile-header { display:none; }
+
 @media (max-width: 768px) {
     .home #sidebar {
         display: none;
     }
+
+    .mobile-header {
+        display: block;
+        .logo {
+            text-align: center;
+            font-size: 6.0rem;
+        }
+    }
+
 
     #page-header {
         margin: 10px auto;

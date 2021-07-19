@@ -2,26 +2,62 @@
 
 Incorporating DRAGEN on Azure into an existing solution may be as easy as using the [ARM template](https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/{{site.dragen_version}}/mainTemplate.json) that is exported alongside this documentation.
 
-Download the [template](https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/{{site.dragen_version}}/mainTemplate.json) and run the following commands to deploy.
-
-```sh
-RESOURCE_GROUP="dragen"
-
-az group create -n "$RESOURCE_GROUP" -l "EastUS"
-
-az deployment group create \
-    -g "$RESOURCE_GROUP" \
-    -p prefix=fpgaci \
-    -p azureBatchServiceOid=795cc567-16b1-4904-9344-afc876387199 \
-    -f mainTemplate.json \
-    --query "properties.outputs"
-```
+#### Usage Scenarios
 
 Deployment using the ARM template enables several more advanced scenarios, such as:
 
 * Incorporation of infrastructure components needed for DRAGEN into an existing infrastructure
 * Automated deployments via CI/CD pipelines
 * Customization of the deployment to meet your needs
+
+#### Prerequisites for ARM Template Deployment
+
+Before attempting to deploy to your subscription via the ARM template, ensure that you have completed all of the [prerequisites](#prerequisites) for running DRAGEN on Azure.
+
+#### Parameters
+
+The ARM template takes the following input parameters:
+
+##### Required parameters (no default value set)
+
+| Parameter Name | Description |
+| -------------- | ----------- |
+| `prefix` | Prefix for resource names (1-17 alphanumeric characters) |
+| `azureBatchServiceOid` | Object ID for Azure Batch on the user's tenant (Can be found by running the command `az ad sp show --id ddbf3205-c6bd-46ae-8127-60eb93363864 --query objectId`) |
+
+##### Optional parameters (default values are set but can be overridden)
+
+| Parameter Name | Default Value | Description |
+| -------------- | ------------- | ----------- |
+| `location` | Resource group location | Azure Region where resources should be deployed |
+| `storageAccountName` | `prefix` + "storage" | Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix) |
+| `storageSku` | Standard_LRS | [Azure Storage SKU](https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types) |
+| `storageNewOrExisting` | new | Specify whether to use an existing storage account or create a new one (Allowed values: `new` or `existing`) |
+| `offerSku` | dragen-alpha-1 | SKU for the DRAGEN offer in the Marketplace |
+| `vmImageVersion` | 3.9.82 | DRAGEN version |
+
+#### Sample ARM Template Deployment
+
+The following sample deploys the ARM template into a resource group using the Azure CLI [deployment group create](https://docs.microsoft.com/en-us/cli/azure/deployment/group?view=azure-cli-latest#az_deployment_group_create) command:
+
+```sh
+# Set variables for command inputs
+RESOURCE_GROUP_NAME="dragen-rg"
+LOCATION="EastUS"
+PREFIX="dragen"
+BATCH_OID=<Batch Object Id for your tenant - see Parameters section>
+
+# Create a resource group
+az group create -n "$RESOURCE_GROUP_NAME" -l "$LOCATION"
+
+# Deploy the ARM template
+az deployment group create \
+    -g "$RESOURCE_GROUP_NAME" \
+    -p prefix="$PREFIX" \
+    -p azureBatchServiceOid="$BATCH_OID" \
+    -f mainTemplate.json \
+    --query "properties.outputs"
+```
 
 #### Using a New vs. Existing Storage Account
 

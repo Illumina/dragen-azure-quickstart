@@ -1,4 +1,4 @@
-This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.
+This Quick Start guide provides instructions and resources to guide users through deploying [Dynamic Read Analysis for GENomics (DRAGEN)](https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.
 
 _Note: DRAGEN currently exists as a private offering in the Azure Marketplace.  If you would like to gain access, please contact Illumina at techsupport@illumina.com._
 
