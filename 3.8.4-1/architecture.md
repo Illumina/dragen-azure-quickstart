@@ -17,17 +17,18 @@ For the most current information on available regions, see the NP-series row of 
 
 List of Azure resources that are deployed by this quickstart if default settings and parameters are used:
 
-* [Blob Storage Account](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) for input and output data
+* [Azure Blob Storage Account](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) for input and output data
     * Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations
     * [Blob Storage Container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction#containers)
-* [Azure Batch Account](https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview) for managing and scheduling DRAGEN jobs
-* User Subscription [node pool]((https://docs.microsoft.com/en-us/azure/batch/nodes-and-pools)) backed by one [NP-series VM](https://docs.microsoft.com/en-us/azure/virtual-machines/np-series) (fixed scale)
-* [Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts) for batch service auth to User Subscription job pool VMs
+* [Azure Batch Account](https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview) for managing and scheduling DRAGEN jobs.
+    * Provisioned in [User Subscription Mode](#user-subscription-node-pools).
+    * [Node pool](https://docs.microsoft.com/en-us/azure/batch/nodes-and-pools) backed by one [NP-series VM](https://docs.microsoft.com/en-us/azure/virtual-machines/np-series) (fixed scale).
+* [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts) for batch service auth to User Subscription node pool VMs
     * Note: Batch service handles auth automatically, so users do not need to take any further action after the Key Vault is created.
 
 ### Note on Batch Node Pool Allocation
 
-Batch offers two options for allocation of node pools: Batch managed and user subscription modes.
+Batch offers two options for allocation of node pools: Batch managed and user subscription modes. A single Batch Account can only support one node pool type at a time, meaning you cannot have batch managed and user subscription mode node pools under the same batch account.
 
 Due to the fact that DRAGEN is currently a private marketplace offering in Azure, users must configure their Batch node pool allocation to User Subscription mode.
 
@@ -56,8 +57,8 @@ Prices are subject to change - more information can be found on the pricing page
 * [Azure Blob Storage](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
 * [Azure Batch](https://azure.microsoft.com/en-us/pricing/details/batch/windows-virtual-machines/)
     * _Note: There is currently no charge for Batch itself, only the compute resources it uses; see VM pricing below_
-* [NP-series VMs](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/#np-series) (a NP10s is used in this reference deployment)
-* [Key Vault](https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing)
+* [Azure NP-series VMs](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/#np-series) (a NP10s is used in this reference deployment)
+* [Azure Key Vault](https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing)
 
 Users are also responsible for costs of any licenses needed to run DRAGEN (not included in this quickstart - must be obtained separately).
 

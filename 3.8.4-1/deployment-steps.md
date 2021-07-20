@@ -12,9 +12,10 @@
 
 ### Deploy the Quickstart (solution template)
 
-1. While signed in your Azure account, open the page for the DRAGEN Solution
-   (TODO: need link to dragen marketplace solution here), and then click "Get It
-   Now"
+1. While signed in your Azure account, open the page for the DRAGEN Solution:
+   1. Navigate to the [Marketplace](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryMenuBlade/selectedMenuItemId/home)
+   1. Select "Private Offers + Plans" in the left hand menu
+   1. Search for and select the "DRAGEN on Azure Batch (preview)" item on the right hand side
 1. Review the terms and conditions, and then choose **Accept Terms**
 1. You'll be prompted to select a resource group, and other particulars of the
    solution to deploy. Once you've made your selections, click **Review + Create**

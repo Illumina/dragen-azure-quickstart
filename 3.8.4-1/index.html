@@ -84,7 +84,8 @@
   
 
 
-  <div id="version-nav"></div>
+  <div class="version-nav"></div>
+
 <div class="sidebar-nav-list">
     
     <a href="#introduction">Introduction</a>
@@ -154,6 +155,7 @@
     
 </div>
 
+
 </nav>
 
 
@@ -209,10 +211,18 @@
   <h1 class="page-title">Illumina DRAGEN on Azure</h1>
 </header>
 <div class="content">
+    <div class="mobile-header">
+        <div class="logo">
+          <span class="icon-dragen-text"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span></span><br/>
+          <span class="icon-plus spacer"></span>
+          <span class="icon-ms-azure"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span><span class="path11"></span><span class="path12"></span></span>
+        </div>
+        <div class="version-nav"></div>
+    </div>
   
 <h2 id="introduction">Introduction</h2>
 
-<p>This Quick Start guide provides instructions and resources to guide users through deploying Dynamic Read Analysis for GENomics (DRAGEN) on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
+<p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
 
 <p><em>Note: DRAGEN currently exists as a private offering in the Azure Marketplace.  If you would like to gain access, please contact Illumina at techsupport@illumina.com.</em></p>
 
@@ -250,15 +260,19 @@
 <p>List of Azure resources that are deployed by this quickstart if default settings and parameters are used:</p>
 
 <ul>
-  <li><a href="https://azure.microsoft.com/en-us/pricing/details/storage/blobs/">Blob Storage Account</a> for input and output data
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/storage/blobs/">Azure Blob Storage Account</a> for input and output data
     <ul>
       <li>Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations</li>
       <li><a href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction#containers">Blob Storage Container</a></li>
     </ul>
   </li>
-  <li><a href="https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview">Azure Batch Account</a> for managing and scheduling DRAGEN jobs</li>
-  <li>User Subscription <a href="(https://docs.microsoft.com/en-us/azure/batch/nodes-and-pools)">node pool</a> backed by one <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series VM</a> (fixed scale)</li>
-  <li><a href="https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts">Key Vault</a> for batch service auth to User Subscription job pool VMs
+  <li><a href="https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview">Azure Batch Account</a> for managing and scheduling DRAGEN jobs.
+    <ul>
+      <li>Provisioned in <a href="#user-subscription-node-pools">User Subscription Mode</a>.</li>
+      <li><a href="https://docs.microsoft.com/en-us/azure/batch/nodes-and-pools">Node pool</a> backed by one <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/np-series">NP-series VM</a> (fixed scale).</li>
+    </ul>
+  </li>
+  <li><a href="https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts">Azure Key Vault</a> for batch service auth to User Subscription node pool VMs
     <ul>
       <li>Note: Batch service handles auth automatically, so users do not need to take any further action after the Key Vault is created.</li>
     </ul>
@@ -267,7 +281,7 @@
 
 <h3 id="note-on-batch-node-pool-allocation">Note on Batch Node Pool Allocation</h3>
 
-<p>Batch offers two options for allocation of node pools: Batch managed and user subscription modes.</p>
+<p>Batch offers two options for allocation of node pools: Batch managed and user subscription modes. A single Batch Account can only support one node pool type at a time, meaning you cannot have batch managed and user subscription mode node pools under the same batch account.</p>
 
 <p>Due to the fact that DRAGEN is currently a private marketplace offering in Azure, users must configure their Batch node pool allocation to User Subscription mode.</p>
 
@@ -300,8 +314,8 @@ There may be cost differences between the two different node pool allocation met
       <li><em>Note: There is currently no charge for Batch itself, only the compute resources it uses; see VM pricing below</em></li>
     </ul>
   </li>
-  <li><a href="https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/#np-series">NP-series VMs</a> (a NP10s is used in this reference deployment)</li>
-  <li><a href="https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing">Key Vault</a></li>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/#np-series">Azure NP-series VMs</a> (a NP10s is used in this reference deployment)</li>
+  <li><a href="https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing">Azure Key Vault</a></li>
 </ul>
 
 <p>Users are also responsible for costs of any licenses needed to run DRAGEN (not included in this quickstart - must be obtained separately).</p>
@@ -316,7 +330,7 @@ There may be cost differences between the two different node pool allocation met
 
 <ul>
   <li><strong>A DRAGEN License</strong> - Contact Illumina.</li>
-  <li><strong>Access to DRAGEN Image via Azure Marketplace</strong> - Contact Illumina.</li>
+  <li><strong>Access to DRAGEN Image via Azure Marketplace</strong> - If you would like to gain access, please contact Illumina at techsupport@illumina.com.</li>
 </ul>
 
 <h3 id="technical-requirements">Technical Requirements</h3>
@@ -391,9 +405,13 @@ pre-requisites section above, by navigating to:</p>
 <h3 id="deploy-the-quickstart-solution-template">Deploy the Quickstart (solution template)</h3>
 
 <ol>
-  <li>While signed in your Azure account, open the page for the DRAGEN Solution
-(TODO: need link to dragen marketplace solution here), and then click “Get It
-Now”</li>
+  <li>While signed in your Azure account, open the page for the DRAGEN Solution:
+    <ol>
+      <li>Navigate to the <a href="https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryMenuBlade/selectedMenuItemId/home">Marketplace</a></li>
+      <li>Select “Private Offers + Plans” in the left hand menu</li>
+      <li>Search for and select the “DRAGEN on Azure Batch (preview)” item on the right hand side</li>
+    </ol>
+  </li>
   <li>Review the terms and conditions, and then choose <strong>Accept Terms</strong></li>
   <li>You’ll be prompted to select a resource group, and other particulars of the
 solution to deploy. Once you’ve made your selections, click <strong>Review + Create</strong>
@@ -410,19 +428,7 @@ at the bottom of the screen</li>
 
 <p>Incorporating DRAGEN on Azure into an existing solution may be as easy as using the <a href="https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/3.8.4-1/mainTemplate.json">ARM template</a> that is exported alongside this documentation.</p>
 
-<p>Download the <a href="https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/3.8.4-1/mainTemplate.json">template</a> and run the following commands to deploy.</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">RESOURCE_GROUP</span><span class="o">=</span><span class="s2">"dragen"</span>
-
-az group create <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP</span><span class="s2">"</span> <span class="nt">-l</span> <span class="s2">"EastUS"</span>
-
-az deployment group create <span class="se">\</span>
-    <span class="nt">-g</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP</span><span class="s2">"</span> <span class="se">\</span>
-    <span class="nt">-p</span> <span class="nv">prefix</span><span class="o">=</span>fpgaci <span class="se">\</span>
-    <span class="nt">-p</span> <span class="nv">azureBatchServiceOid</span><span class="o">=</span>795cc567-16b1-4904-9344-afc876387199 <span class="se">\</span>
-    <span class="nt">-f</span> mainTemplate.json <span class="se">\</span>
-    <span class="nt">--query</span> <span class="s2">"properties.outputs"</span>
-</code></pre></div></div>
+<h4 id="usage-scenarios">Usage Scenarios</h4>
 
 <p>Deployment using the ARM template enables several more advanced scenarios, such as:</p>
 
@@ -431,6 +437,101 @@ az deployment group create <span class="se">\</span>
   <li>Automated deployments via CI/CD pipelines</li>
   <li>Customization of the deployment to meet your needs</li>
 </ul>
+
+<h4 id="prerequisites-for-arm-template-deployment">Prerequisites for ARM Template Deployment</h4>
+
+<p>Before attempting to deploy to your subscription via the ARM template, ensure that you have completed all of the <a href="#prerequisites">prerequisites</a> for running DRAGEN on Azure.</p>
+
+<h4 id="parameters">Parameters</h4>
+
+<p>The ARM template takes the following input parameters:</p>
+
+<h5 id="required-parameters-no-default-value-set">Required parameters (no default value set)</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">prefix</code></td>
+      <td>Prefix for resource names (1-17 alphanumeric characters)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">azureBatchServiceOid</code></td>
+      <td>Object ID for Azure Batch on the user’s tenant (Can be found by running the command <code class="language-plaintext highlighter-rouge">az ad sp show --id ddbf3205-c6bd-46ae-8127-60eb93363864 --query objectId</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="optional-parameters-default-values-are-set-but-can-be-overridden">Optional parameters (default values are set but can be overridden)</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Default Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">location</code></td>
+      <td>Resource group location</td>
+      <td>Azure Region where resources should be deployed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageAccountName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">prefix</code> + “storage”</td>
+      <td>Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageSku</code></td>
+      <td>Standard_LRS</td>
+      <td><a href="https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types">Azure Storage SKU</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageNewOrExisting</code></td>
+      <td>new</td>
+      <td>Specify whether to use an existing storage account or create a new one (Allowed values: <code class="language-plaintext highlighter-rouge">new</code> or <code class="language-plaintext highlighter-rouge">existing</code>)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">offerSku</code></td>
+      <td>dragen-alpha-1</td>
+      <td>SKU for the DRAGEN offer in the Marketplace</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vmImageVersion</code></td>
+      <td>3.9.82</td>
+      <td>DRAGEN version</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="sample-arm-template-deployment">Sample ARM Template Deployment</h4>
+
+<p>The following sample deploys the ARM template into a resource group using the Azure CLI <a href="https://docs.microsoft.com/en-us/cli/azure/deployment/group?view=azure-cli-latest#az_deployment_group_create">deployment group create</a> command:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Set variables for command inputs</span>
+<span class="nv">RESOURCE_GROUP_NAME</span><span class="o">=</span><span class="s2">"dragen-rg"</span>
+<span class="nv">LOCATION</span><span class="o">=</span><span class="s2">"EastUS"</span>
+<span class="nv">PREFIX</span><span class="o">=</span><span class="s2">"dragen"</span>
+<span class="nv">BATCH_OID</span><span class="o">=</span>&lt;Batch Object Id <span class="k">for </span>your tenant - see Parameters section&gt;
+
+<span class="c"># Create a resource group</span>
+az group create <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP_NAME</span><span class="s2">"</span> <span class="nt">-l</span> <span class="s2">"</span><span class="nv">$LOCATION</span><span class="s2">"</span>
+
+<span class="c"># Deploy the ARM template</span>
+az deployment group create <span class="se">\</span>
+    <span class="nt">-g</span> <span class="s2">"</span><span class="nv">$RESOURCE_GROUP_NAME</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-p</span> <span class="nv">prefix</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PREFIX</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-p</span> <span class="nv">azureBatchServiceOid</span><span class="o">=</span><span class="s2">"</span><span class="nv">$BATCH_OID</span><span class="s2">"</span> <span class="se">\</span>
+    <span class="nt">-f</span> mainTemplate.json <span class="se">\</span>
+    <span class="nt">--query</span> <span class="s2">"properties.outputs"</span>
+</code></pre></div></div>
 
 <h4 id="using-a-new-vs-existing-storage-account">Using a New vs. Existing Storage Account</h4>
 
@@ -751,29 +852,47 @@ can be used to create the batch task.</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> job1 pool-id mypool
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+<p>The following command line string is stored to the <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s2">"mkdir dragen output; </span><span class="se">\</span><span class="s2">
-tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
-    -1 1.fq.gz </span><span class="se">\</span><span class="s2">
-    -2 2.fq.gz </span><span class="se">\</span><span class="s2">
-    --RGID NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="s2">
-    --RGSM NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="s2">
-    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
-    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
-    --enable-sort true </span><span class="se">\</span><span class="s2">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
-    --enable-map-align true </span><span class="se">\</span><span class="s2">
-    --output-format BAM </span><span class="se">\</span><span class="s2">
-    --output-directory output </span><span class="se">\</span><span class="s2">
-    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
-    --lic-server &lt;LICENSE&gt;"</span>
+<h5 id="command-variable"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">COMMAND</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+
+/bin/bash -c </span><span class="se">\</span><span class="sh">
+"mkdir dragen output; </span><span class="se">\</span><span class="sh">
+tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="sh">
+    -1 1.fq.gz </span><span class="se">\</span><span class="sh">
+    -2 2.fq.gz </span><span class="se">\</span><span class="sh">
+    --RGID NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="sh">
+    --RGSM NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="sh">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
+    --enable-map-align-output true </span><span class="se">\</span><span class="sh">
+    --enable-sort true </span><span class="se">\</span><span class="sh">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --enable-map-align true </span><span class="se">\</span><span class="sh">
+    --output-format BAM </span><span class="se">\</span><span class="sh">
+    --output-directory output </span><span class="se">\</span><span class="sh">
+    --enable-variant-caller true </span><span class="se">\</span><span class="sh">
+    --lic-server &lt;LICENSE&gt;"
+</span><span class="no">
+EOF
+</span><span class="si">)</span>
 </code></pre></div></div>
 
-<p>task.json</p>
+<p>This one-liner achieves the following:</p>
+
+<ol>
+  <li>Sets up Genome and Output directories</li>
+  <li>Unarchives the genome file</li>
+  <li>Runs a partial reconfig on the FPGA</li>
+  <li>Runs DRAGEN</li>
+</ol>
+
+<p>The <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable is now interpolated in the <code class="language-plaintext highlighter-rouge">task.json</code> file below.</p>
+
+<h5 id="taskjson-1">task.json</h5>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task1"</span><span class="p">,</span><span class="w">
@@ -867,31 +986,40 @@ processing.  DRAGEN does not currently support streaming from public Blob contai
   <li>FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.</li>
 </ul>
 
-<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+<h5 id="command-variable-for-streaming"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for Streaming</h5>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s2">"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-mkdir dragen output; </span><span class="se">\</span><span class="s2">
-tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
-    -1 &lt;FQ1_URL&gt; </span><span class="se">\</span><span class="s2">
-    -2 &lt;FQ2_URL&gt; </span><span class="se">\</span><span class="s2">
-    --RGID &lt;RGID&gt; </span><span class="se">\</span><span class="s2">
-    --RGSM &lt;RGSM&gt; </span><span class="se">\</span><span class="s2">
-    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
-    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
-    --enable-sort true </span><span class="se">\</span><span class="s2">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
-    --enable-map-align true </span><span class="se">\</span><span class="s2">
-    --output-format BAM </span><span class="se">\</span><span class="s2">
-    --output-directory output </span><span class="se">\</span><span class="s2">
-    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
-    --lic-server &lt;LICENSE&gt;"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">COMMAND</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+
+/bin/bash -c </span><span class="se">\</span><span class="sh">
+"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+mkdir dragen output; </span><span class="se">\</span><span class="sh">
+tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="sh">
+    -1 &lt;FQ1_URL&gt; </span><span class="se">\</span><span class="sh">
+    -2 &lt;FQ2_URL&gt; </span><span class="se">\</span><span class="sh">
+    --RGID &lt;RGID&gt; </span><span class="se">\</span><span class="sh">
+    --RGSM &lt;RGSM&gt; </span><span class="se">\</span><span class="sh">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
+    --enable-map-align-output true </span><span class="se">\</span><span class="sh">
+    --enable-sort true </span><span class="se">\</span><span class="sh">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --enable-map-align true </span><span class="se">\</span><span class="sh">
+    --output-format BAM </span><span class="se">\</span><span class="sh">
+    --output-directory output </span><span class="se">\</span><span class="sh">
+    --enable-variant-caller true </span><span class="se">\</span><span class="sh">
+    --lic-server &lt;LICENSE&gt;"
+</span><span class="no">
+EOF
+</span><span class="si">)</span>
 </code></pre></div></div>
+
+<p>This one-liner achieves the same as the <code class="language-plaintext highlighter-rouge">$COMMAND</code> <a href="#$command-variable">before</a>
+with the addition of creating a <code class="language-plaintext highlighter-rouge">.azure-credentials</code> file containing key-value
+pairs of Storage Account credentials.</p>
 
 <p>In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json</p>
@@ -907,14 +1035,15 @@ resourceFiles in the task.json</p>
 also be local to the node.  The FASTQ files referenced in the FASTQ list can be URLs
 to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
 The below example shows an example of this using the
-resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.</p>
+resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.
+This is stored as the <a href="#list_url-for-streaming"><code class="language-plaintext highlighter-rouge">$LIST_URL</code></a> variable.</p>
 
 <p>Since we are streaming from Azure Blob Storage, we will need the <code class="language-plaintext highlighter-rouge">~/.azure-credentials</code> file
 again.</p>
 
-<p><code class="language-plaintext highlighter-rouge">LIST_URL=</code></p>
+<h5 id="list_url-for-streaming"><code class="language-plaintext highlighter-rouge">$LIST_URL</code> for Streaming</h5>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az storage blob generate-sas <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LIST_URL</span><span class="o">=</span><span class="si">$(</span>az storage blob generate-sas <span class="se">\</span>
     <span class="nt">--name</span> &lt;FASTQ_LIST_BLOB_PATH&gt; <span class="se">\</span>
     <span class="nt">--account-name</span> &lt;STORAGE_ACCOUNT&gt; <span class="se">\</span>
     <span class="nt">--account-key</span> &lt;STORAGE_ACCOUNT_KEY&gt; <span class="se">\</span>
@@ -923,34 +1052,39 @@ again.</p>
     <span class="nt">--permissions</span> r <span class="se">\</span>
     <span class="nt">--https</span> <span class="se">\</span>
     <span class="nt">--full-uri</span> <span class="se">\</span>
-    <span class="nt">--output</span> tsv
+    <span class="nt">--output</span> tsv<span class="si">)</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">COMMAND=</code></p>
+<h5 id="command-variable-for-fastq"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for FastQ</h5>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="se">\</span>
-<span class="s2">"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="s2">
-mkdir dragen output; </span><span class="se">\</span><span class="s2">
-tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="s2">
-/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="s2">
-    --fastq-list fastq_list.csv </span><span class="se">\</span><span class="s2">
-    --fastq-list-sample-id &lt;RGSM&gt; </span><span class="se">\</span><span class="s2">
-    --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
-    --enable-map-align-output true </span><span class="se">\</span><span class="s2">
-    --enable-sort true </span><span class="se">\</span><span class="s2">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
-    --enable-map-align true </span><span class="se">\</span><span class="s2">
-    --output-format BAM </span><span class="se">\</span><span class="s2">
-    --output-directory output </span><span class="se">\</span><span class="s2">
-    --enable-variant-caller true </span><span class="se">\</span><span class="s2">
-    --lic-server &lt;LICENSE&gt;"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">COMMAND</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+
+/bin/bash -c </span><span class="se">\</span><span class="sh">
+"echo DefaultEndpointsProtocol=https &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo AccountName=&lt;STORAGE_ACCOUNT_NAME&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo AccountKey=&lt;STORAGE_ACCOUNT_KEY&gt; &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+echo EndpointSuffix=core.windows.net &gt;&gt; ~/.azure-credentials; </span><span class="se">\</span><span class="sh">
+mkdir dragen output; </span><span class="se">\</span><span class="sh">
+tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true; </span><span class="se">\</span><span class="sh">
+/opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="sh">
+    --fastq-list fastq_list.csv </span><span class="se">\</span><span class="sh">
+    --fastq-list-sample-id &lt;RGSM&gt; </span><span class="se">\</span><span class="sh">
+    --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
+    --enable-map-align-output true </span><span class="se">\</span><span class="sh">
+    --enable-sort true </span><span class="se">\</span><span class="sh">
+    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --enable-map-align true </span><span class="se">\</span><span class="sh">
+    --output-format BAM </span><span class="se">\</span><span class="sh">
+    --output-directory output </span><span class="se">\</span><span class="sh">
+    --enable-variant-caller true </span><span class="se">\</span><span class="sh">
+    --lic-server &lt;LICENSE&gt;"
+</span><span class="no">
+EOF
+</span><span class="si">)</span>
 </code></pre></div></div>
 
-<p>task.json resourceFiles:</p>
+<h5 id="taskjson-resourcefiles">task.json resourceFiles</h5>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"resourceFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
     </span><span class="nl">"filePath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dragen.tar"</span><span class="p">,</span><span class="w">
@@ -968,7 +1102,7 @@ tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="s2">
 
 <h5 id="example-bash-script">Example Bash Script</h5>
 
-<p>An <a href="../create-batch-task.sh">example bash script</a> using the above commands is available for reference.
+<p>An <a href="./create-batch-task.sh">example bash script</a> using the above commands is available for reference.
 There is a required <code class="language-plaintext highlighter-rouge">LICENSE_URL</code> environment variable, as well as some variables within the script
 that must be set before running it, ie:</p>
 
@@ -1096,11 +1230,12 @@ command.</p>
                 if (v.version == THIS_VERSION) select += ' selected';
                 select += '>'+v.version;
                 if (v.latest) select += ' (★ Latest)';
-                select += '</option>'; 
+                select += '</option>';
             });
             select += '</select>';
-            var nav = document.querySelector('#version-nav');
-            nav.innerHTML = select;
+            document.querySelectorAll('.version-nav').forEach(function(nav) {
+              nav.innerHTML = select;
+            });
           });
         } else {
           console.log('ERROR', response);
@@ -1110,6 +1245,7 @@ command.</p>
       console.log('Error', err);
     });
 </script>
+
     </main>
 
     <!-- Optional footer content -->

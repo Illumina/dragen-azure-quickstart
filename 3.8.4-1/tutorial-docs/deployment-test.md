@@ -258,9 +258,13 @@ az batch task create \
 az batch job create --id job1 pool-id mypool
 ```
 
-`COMMAND=`
+The following command line string is stored to the `$COMMAND` variable.
+
+##### `$COMMAND` Variable
 
 ```bash
+COMMAND=$(cat <<EOF
+
 /bin/bash -c \
 "mkdir dragen output; \
 tar xzvf dragen.tar -C dragen; \
@@ -279,9 +283,21 @@ tar xzvf dragen.tar -C dragen; \
     --output-directory output \
     --enable-variant-caller true \
     --lic-server <LICENSE>"
+
+EOF
+)
 ```
 
-task.json
+This one-liner achieves the following:
+
+1. Sets up Genome and Output directories
+1. Unarchives the genome file
+1. Runs a partial reconfig on the FPGA
+1. Runs DRAGEN
+
+The `$COMMAND` variable is now interpolated in the `task.json` file below.
+
+##### task.json
 
 ```json
 {
@@ -375,9 +391,11 @@ processing.  DRAGEN does not currently support streaming from public Blob contai
 * FQ1_URL: The full URL to the first FASTQ file in Azure Blob Storage.
 * FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.
 
-`COMMAND=`
+##### `$COMMAND` Variable for Streaming
 
 ```bash
+COMMAND=$(cat <<EOF
+
 /bin/bash -c \
 "echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
 echo AccountName=<STORAGE_ACCOUNT_NAME> >> ~/.azure-credentials; \
@@ -400,7 +418,14 @@ tar xzvf dragen.tar -C dragen; \
     --output-directory output \
     --enable-variant-caller true \
     --lic-server <LICENSE>"
+
+EOF
+)
 ```
+
+This one-liner achieves the same as the `$COMMAND` [before](#$command-variable)
+with the addition of creating a `.azure-credentials` file containing key-value
+pairs of Storage Account credentials.
 
 In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json
@@ -418,14 +443,15 @@ also be local to the node.  The FASTQ files referenced in the FASTQ list can be 
 to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
 The below example shows an example of this using the
 resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.
+This is stored as the [`$LIST_URL`](#list_url-for-streaming) variable.
 
 Since we are streaming from Azure Blob Storage, we will need the `~/.azure-credentials` file
 again.
 
-`LIST_URL=`
+##### `$LIST_URL` for Streaming
 
-```sh
-az storage blob generate-sas \
+```bash
+LIST_URL=$(az storage blob generate-sas \
     --name <FASTQ_LIST_BLOB_PATH> \
     --account-name <STORAGE_ACCOUNT> \
     --account-key <STORAGE_ACCOUNT_KEY> \
@@ -434,12 +460,14 @@ az storage blob generate-sas \
     --permissions r \
     --https \
     --full-uri \
-    --output tsv
+    --output tsv)
 ```
 
-`COMMAND=`
+##### `$COMMAND` Variable for FastQ
 
 ```bash
+COMMAND=$(cat <<EOF
+
 /bin/bash -c \
 "echo DefaultEndpointsProtocol=https >> ~/.azure-credentials; \
 echo AccountName=<STORAGE_ACCOUNT_NAME> >> ~/.azure-credentials; \
@@ -460,9 +488,12 @@ tar xvf dragen.tar -C dragen; \
     --output-directory output \
     --enable-variant-caller true \
     --lic-server <LICENSE>"
+
+EOF
+)
 ```
 
-task.json resourceFiles:
+##### task.json resourceFiles
 
 ```json
 "resourceFiles": [{
@@ -482,7 +513,7 @@ az batch task create \
 
 ##### Example Bash Script
 
-An [example bash script](../create-batch-task.sh) using the above commands is available for reference.
+An [example bash script](./create-batch-task.sh) using the above commands is available for reference.
 There is a required `LICENSE_URL` environment variable, as well as some variables within the script
 that must be set before running it, ie:
 
