@@ -14,10 +14,12 @@
 
 1. While signed in to your Azure account, open the page for the DRAGEN Solution:
    1. Navigate to the [Marketplace](https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryMenuBlade/selectedMenuItemId/home)
-   1. Search for "DRAGEN" and select DRAGEN on Azure Batch
-1. Review the terms and conditions, and then choose **Accept Terms**
-1. You'll be prompted to select a resource group, and other particulars of the
-   solution to deploy. Once you've made your selections, click **Review + Create**
-   at the bottom of the screen
-1. You can check deployment status in the top right of the Azure Portal page.
+   1. Search for "DRAGEN" and select DRAGEN Bio-IT Platform for Genomic Data Analysis on Azure Batch
+1. If prompted, review the terms and conditions and then choose **Accept Terms**
+1. Click **Create**
+1. You'll be prompted to select a resource group and other particulars of the solution to deploy
+**NOTE:** For storage settings, the "Premium" type SKUs are not currently supported by this offering
+1. Once you've made your selections, click **Review + Create**
+   at the bottom of the screen and click **Create**
+1. You can check deployment status in the top right of the Azure Portal page
    ![deployment-status](./images/deployment-status.png)

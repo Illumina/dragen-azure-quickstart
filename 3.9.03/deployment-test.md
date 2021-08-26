@@ -423,7 +423,7 @@ EOF
 )
 ```
 
-This one-liner achieves the same as the `$COMMAND` [before](#$command-variable)
+This one-liner achieves the same as the `$COMMAND` [before](#command-variable)
 with the addition of creating a `.azure-credentials` file containing key-value
 pairs of Storage Account credentials.
 

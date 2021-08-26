@@ -1,6 +1,6 @@
 ### Advanced Usage: ARM Template
 
-Incorporating DRAGEN on Azure into an existing solution may be as easy as using the [ARM template](https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/{{site.dragen_version}}/mainTemplate.json) that is exported alongside this documentation.
+Incorporating DRAGEN on Azure into an existing solution may be as easy as using the [ARM template](mainTemplate.json) that is exported alongside this documentation.
 
 #### Usage Scenarios
 
@@ -31,10 +31,11 @@ The ARM template takes the following input parameters:
 | -------------- | ------------- | ----------- |
 | `location` | Resource group location | Azure Region where resources should be deployed |
 | `storageAccountName` | `prefix` + "storage" | Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix) |
-| `storageSku` | Standard_LRS | [Azure Storage SKU](https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types) |
+| `storageSku` | Standard_LRS* | [Azure Storage SKU](https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types) |
 | `storageNewOrExisting` | new | Specify whether to use an existing storage account or create a new one (Allowed values: `new` or `existing`) |
 | `offerSku` | dragen-3-9-3 | SKU for the DRAGEN offer in the Marketplace |
 | `vmImageVersion` | 3.9.03 | DRAGEN version |
+**NOTE:** The "Premium" type SKUs are not currently supported by this offering.
 
 #### Sample ARM Template Deployment
 

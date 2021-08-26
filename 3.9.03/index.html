@@ -222,8 +222,6 @@
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
 
-<p><em>Note: DRAGEN currently exists as a private offering in the Azure Marketplace.  If you would like to gain access, please contact Illumina at techsupport@illumina.com.</em></p>
-
 <p>This tutorial and its associated Marketplace solution in Azure were developed by Illumina in collaboration with Microsoft.  The reference deployment described below serves as a starting point, but can be further customized to meet your needs.</p>
 
 <p>If you run into any issues while going through the tutorial, please <a href="#contributing">share your feedback with us</a>!</p>
@@ -258,7 +256,7 @@
 <p>List of Azure resources that are deployed by this quickstart if default settings and parameters are used:</p>
 
 <ul>
-  <li><a href="https://azure.microsoft.com/en-us/pricing/details/storage/blobs/">Azure Blob Storage Account</a> for input and output data
+  <li><a href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview">Azure Blob Storage Account</a> for input and output data
     <ul>
       <li>Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations</li>
       <li><a href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction#containers">Blob Storage Container</a></li>
@@ -281,23 +279,17 @@
 
 <p>Batch offers two options for allocation of node pools: Batch managed and user subscription modes. A single Batch Account can only support one node pool type at a time, meaning you cannot have batch managed and user subscription mode node pools under the same batch account.</p>
 
-<p>Due to the fact that DRAGEN is currently a private marketplace offering in Azure, users must configure their Batch node pool allocation to User Subscription mode.</p>
+<h4 id="batch-managed-node-pools">Batch Managed Node Pools</h4>
 
-<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
-
-#### Batch Managed Node Pools
-
-When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD. -->
+<p>When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD.</p>
 
 <h4 id="user-subscription-node-pools">User Subscription Node Pools</h4>
 
 <p>When the User Subscription allocation mode is selected, users request an overall quota for NP VMs for a region within their subscription.  With this model, the VMs needed for the Batch account are created directly in the user’s subscription.  This setup is useful for CI/CD and other cases where users are running DRAGEN across many Batch accounts within a subscription and/or the Batch accounts are short-lived.</p>
 
-<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
+<h4 id="cost-differences-in-node-pool-allocation-modes">Cost Differences in Node Pool Allocation Modes</h4>
 
-#### Cost Differences in Node Pool Allocation Modes
-
-There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs. -->
+<p>There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs.</p>
 
 <h3 id="azure-costs">Azure Costs</h3>
 
@@ -327,7 +319,7 @@ There may be cost differences between the two different node pool allocation met
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
-  <li><strong>A DRAGEN License</strong> - Contact Illumina.</li>
+  <li><strong>A DRAGEN License</strong> - To obtain a license, please contact Illumina at techsupport@illumina.com.</li>
   <li><strong>Access to DRAGEN Image via Azure Marketplace</strong> - If you would like to gain access, please contact Illumina at techsupport@illumina.com.</li>
 </ul>
 
@@ -371,7 +363,7 @@ will need to request access to this Virtual Machine SKU family, as described bel
 
 <p>If your organization is concerned about this level of access, a deployment pipeline (e.g., GitHub Actions) running as a managed service principal with <strong><em>contributor</em></strong> access can allow others to have a more restricted privilege level (e.g., Resource Group Contributor, Subscription Reader).</p>
 
-<p>When utilizing a User Subscription Mode Batch Account, the Azure Batch Service must be added to the Azure Subscription as a Contributor. To add this level of access, you must be at least a Subscription Contributor. For more see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal#additional-configuration-for-user-subscription-mode">additional configuration for user subscription mode</a>.</p>
+<p>When utilizing a User Subscription Mode Batch Account, the Azure Batch Service must be added to the Azure Subscription as a Contributor. To add this level of access, you must be at least a Subscription Contributor. For more information, see <a href="https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal#additional-configuration-for-user-subscription-mode">additional configuration for user subscription mode</a>.</p>
 
 <p><br /></p>
 
@@ -406,14 +398,16 @@ pre-requisites section above, by navigating to:</p>
   <li>While signed in to your Azure account, open the page for the DRAGEN Solution:
     <ol>
       <li>Navigate to the <a href="https://ms.portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryMenuBlade/selectedMenuItemId/home">Marketplace</a></li>
-      <li>Search for “DRAGEN” and select DRAGEN on Azure Batch</li>
+      <li>Search for “DRAGEN” and select DRAGEN Bio-IT Platform for Genomic Data Analysis on Azure Batch</li>
     </ol>
   </li>
-  <li>Review the terms and conditions, and then choose <strong>Accept Terms</strong></li>
-  <li>You’ll be prompted to select a resource group, and other particulars of the
-solution to deploy. Once you’ve made your selections, click <strong>Review + Create</strong>
-at the bottom of the screen</li>
-  <li>You can check deployment status in the top right of the Azure Portal page.
+  <li>If prompted, review the terms and conditions and then choose <strong>Accept Terms</strong></li>
+  <li>Click <strong>Create</strong></li>
+  <li>You’ll be prompted to select a resource group and other particulars of the solution to deploy
+<strong>NOTE:</strong> For storage settings, the “Premium” type SKUs are not currently supported by this offering</li>
+  <li>Once you’ve made your selections, click <strong>Review + Create</strong>
+at the bottom of the screen and click <strong>Create</strong></li>
+  <li>You can check deployment status in the top right of the Azure Portal page
 <img src="./images/deployment-status.png" alt="deployment-status" /></li>
 </ol>
 
@@ -423,7 +417,7 @@ at the bottom of the screen</li>
 
 <h3 id="advanced-usage-arm-template">Advanced Usage: ARM Template</h3>
 
-<p>Incorporating DRAGEN on Azure into an existing solution may be as easy as using the <a href="https://github.com/Illumina/dragen-azure-quickstart/blob/gh-pages/3.8.4-1/mainTemplate.json">ARM template</a> that is exported alongside this documentation.</p>
+<p>Incorporating DRAGEN on Azure into an existing solution may be as easy as using the <a href="mainTemplate.json">ARM template</a> that is exported alongside this documentation.</p>
 
 <h4 id="usage-scenarios">Usage Scenarios</h4>
 
@@ -466,47 +460,15 @@ at the bottom of the screen</li>
 
 <h5 id="optional-parameters-default-values-are-set-but-can-be-overridden">Optional parameters (default values are set but can be overridden)</h5>
 
-<table>
-  <thead>
-    <tr>
-      <th>Parameter Name</th>
-      <th>Default Value</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">location</code></td>
-      <td>Resource group location</td>
-      <td>Azure Region where resources should be deployed</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">storageAccountName</code></td>
-      <td><code class="language-plaintext highlighter-rouge">prefix</code> + “storage”</td>
-      <td>Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">storageSku</code></td>
-      <td>Standard_LRS</td>
-      <td><a href="https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types">Azure Storage SKU</a></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">storageNewOrExisting</code></td>
-      <td>new</td>
-      <td>Specify whether to use an existing storage account or create a new one (Allowed values: <code class="language-plaintext highlighter-rouge">new</code> or <code class="language-plaintext highlighter-rouge">existing</code>)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">offerSku</code></td>
-      <td>dragen-3-9-3</td>
-      <td>SKU for the DRAGEN offer in the Marketplace</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">vmImageVersion</code></td>
-      <td>3.9.03</td>
-      <td>DRAGEN version</td>
-    </tr>
-  </tbody>
-</table>
+<p>| Parameter Name | Default Value | Description |
+| ————– | ————- | ———– |
+| <code class="language-plaintext highlighter-rouge">location</code> | Resource group location | Azure Region where resources should be deployed |
+| <code class="language-plaintext highlighter-rouge">storageAccountName</code> | <code class="language-plaintext highlighter-rouge">prefix</code> + “storage” | Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix) |
+| <code class="language-plaintext highlighter-rouge">storageSku</code> | Standard_LRS* | <a href="https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types">Azure Storage SKU</a> |
+| <code class="language-plaintext highlighter-rouge">storageNewOrExisting</code> | new | Specify whether to use an existing storage account or create a new one (Allowed values: <code class="language-plaintext highlighter-rouge">new</code> or <code class="language-plaintext highlighter-rouge">existing</code>) |
+| <code class="language-plaintext highlighter-rouge">offerSku</code> | dragen-3-9-3 | SKU for the DRAGEN offer in the Marketplace |
+| <code class="language-plaintext highlighter-rouge">vmImageVersion</code> | 3.9.03 | DRAGEN version |
+<strong>NOTE:</strong> The “Premium” type SKUs are not currently supported by this offering.</p>
 
 <h4 id="sample-arm-template-deployment">Sample ARM Template Deployment</h4>
 
@@ -1014,7 +976,7 @@ EOF
 </span><span class="si">)</span>
 </code></pre></div></div>
 
-<p>This one-liner achieves the same as the <code class="language-plaintext highlighter-rouge">$COMMAND</code> <a href="#$command-variable">before</a>
+<p>This one-liner achieves the same as the <code class="language-plaintext highlighter-rouge">$COMMAND</code> <a href="#command-variable">before</a>
 with the addition of creating a <code class="language-plaintext highlighter-rouge">.azure-credentials</code> file containing key-value
 pairs of Storage Account credentials.</p>
 

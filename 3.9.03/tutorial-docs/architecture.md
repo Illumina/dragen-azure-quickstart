@@ -17,7 +17,7 @@ For the most current information on available regions, see the NP-series row of 
 
 List of Azure resources that are deployed by this quickstart if default settings and parameters are used:
 
-* [Azure Blob Storage Account](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/) for input and output data
+* [Azure Blob Storage Account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview) for input and output data
     * Note: A new storage account is created by default, although users have the option to specify an existing storage account - see section on additional deployment configurations
     * [Blob Storage Container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction#containers)
 * [Azure Batch Account](https://docs.microsoft.com/en-us/azure/batch/batch-technical-overview) for managing and scheduling DRAGEN jobs.
@@ -30,23 +30,17 @@ List of Azure resources that are deployed by this quickstart if default settings
 
 Batch offers two options for allocation of node pools: Batch managed and user subscription modes. A single Batch Account can only support one node pool type at a time, meaning you cannot have batch managed and user subscription mode node pools under the same batch account.
 
-Due to the fact that DRAGEN is currently a private marketplace offering in Azure, users must configure their Batch node pool allocation to User Subscription mode.
-
-<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
-
 #### Batch Managed Node Pools
 
-When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD. -->
+When Batch Managed allocation mode is selected, users must request NP VM quota for each specific Batch instance they create.  Nodes are allocated as needed from Batch-managed subscriptions.  This scenario works best when users intend to persist and use one or very few Batch instances for their DRAGEN jobs.  It is less ideal in situations where the creation/deletion of Batch accounts is automated or occurs frequently, as with CI/CD.
 
 #### User Subscription Node Pools
 
 When the User Subscription allocation mode is selected, users request an overall quota for NP VMs for a region within their subscription.  With this model, the VMs needed for the Batch account are created directly in the user's subscription.  This setup is useful for CI/CD and other cases where users are running DRAGEN across many Batch accounts within a subscription and/or the Batch accounts are short-lived.
 
-<!-- Uncomment this section once DRAGEN is available as a public Marketplace offering
-
 #### Cost Differences in Node Pool Allocation Modes
 
-There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs. -->
+There may be cost differences between the two different node pool allocation methods.  Consider your usage scenarios and consult Azure documentation and pricing calculators to determine which approach will be most optimal for your needs.
 
 ### Azure Costs
 

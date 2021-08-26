@@ -1,4 +1,4 @@
-* **A DRAGEN License** - Contact Illumina.
+* **A DRAGEN License** - To obtain a license, please contact Illumina at techsupport@illumina.com.
 * **Access to DRAGEN Image via Azure Marketplace** - If you would like to gain access, please contact Illumina at techsupport@illumina.com.
 
 ### Technical Requirements
@@ -37,4 +37,4 @@ To provision this solution, the Active Directory principal (account, service pri
 
 If your organization is concerned about this level of access, a deployment pipeline (e.g., GitHub Actions) running as a managed service principal with ***contributor*** access can allow others to have a more restricted privilege level (e.g., Resource Group Contributor, Subscription Reader).
 
-When utilizing a User Subscription Mode Batch Account, the Azure Batch Service must be added to the Azure Subscription as a Contributor. To add this level of access, you must be at least a Subscription Contributor. For more see [additional configuration for user subscription mode](https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal#additional-configuration-for-user-subscription-mode).
+When utilizing a User Subscription Mode Batch Account, the Azure Batch Service must be added to the Azure Subscription as a Contributor. To add this level of access, you must be at least a Subscription Contributor. For more information, see [additional configuration for user subscription mode](https://docs.microsoft.com/en-us/azure/batch/batch-account-create-portal#additional-configuration-for-user-subscription-mode).
