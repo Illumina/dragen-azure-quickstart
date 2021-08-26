@@ -1,4 +1,4 @@
-I"a
+I"�	
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -241,15 +241,49 @@ at the bottom of the screen and click <strong>Create</strong></li>
 
 <h5 id="optional-parameters-default-values-are-set-but-can-be-overridden">Optional parameters (default values are set but can be overridden)</h5>
 
-<p>| Parameter Name | Default Value | Description |
-| ————– | ————- | ———– |
-| <code class="language-plaintext highlighter-rouge">location</code> | Resource group location | Azure Region where resources should be deployed |
-| <code class="language-plaintext highlighter-rouge">storageAccountName</code> | <code class="language-plaintext highlighter-rouge">prefix</code> + “storage” | Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix) |
-| <code class="language-plaintext highlighter-rouge">storageSku</code> | Standard_LRS* | <a href="https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types">Azure Storage SKU</a> |
-| <code class="language-plaintext highlighter-rouge">storageNewOrExisting</code> | new | Specify whether to use an existing storage account or create a new one (Allowed values: <code class="language-plaintext highlighter-rouge">new</code> or <code class="language-plaintext highlighter-rouge">existing</code>) |
-| <code class="language-plaintext highlighter-rouge">offerSku</code> | dragen-3-9-3 | SKU for the DRAGEN offer in the Marketplace |
-| <code class="language-plaintext highlighter-rouge">vmImageVersion</code> | 3.9.03 | DRAGEN version |
-<strong>NOTE:</strong> The “Premium” type SKUs are not currently supported by this offering.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Default Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">location</code></td>
+      <td>Resource group location</td>
+      <td>Azure Region where resources should be deployed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageAccountName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">prefix</code> + “storage”</td>
+      <td>Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageSku</code></td>
+      <td>Standard_LRS*</td>
+      <td><a href="https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types">Azure Storage SKU</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">storageNewOrExisting</code></td>
+      <td>new</td>
+      <td>Specify whether to use an existing storage account or create a new one (Allowed values: <code class="language-plaintext highlighter-rouge">new</code> or <code class="language-plaintext highlighter-rouge">existing</code>)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">offerSku</code></td>
+      <td>dragen-3-9-3</td>
+      <td>SKU for the DRAGEN offer in the Marketplace</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vmImageVersion</code></td>
+      <td>3.9.03</td>
+      <td>DRAGEN version</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>*NOTE:</strong> The “Premium” type SKUs are not currently supported by this offering.</p>
 
 <h4 id="sample-arm-template-deployment">Sample ARM Template Deployment</h4>
 

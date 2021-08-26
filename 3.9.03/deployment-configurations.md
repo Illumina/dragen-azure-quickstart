@@ -35,7 +35,8 @@ The ARM template takes the following input parameters:
 | `storageNewOrExisting` | new | Specify whether to use an existing storage account or create a new one (Allowed values: `new` or `existing`) |
 | `offerSku` | dragen-3-9-3 | SKU for the DRAGEN offer in the Marketplace |
 | `vmImageVersion` | 3.9.03 | DRAGEN version |
-**NOTE:** The "Premium" type SKUs are not currently supported by this offering.
+
+***NOTE:** The "Premium" type SKUs are not currently supported by this offering.
 
 #### Sample ARM Template Deployment
 
