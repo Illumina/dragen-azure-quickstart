@@ -1,4 +1,4 @@
-I"�	
+I"�
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -184,8 +184,11 @@ pre-requisites section above, by navigating to:</p>
   </li>
   <li>If prompted, review the terms and conditions and then choose <strong>Accept Terms</strong></li>
   <li>Click <strong>Create</strong></li>
-  <li>You’ll be prompted to select a resource group and other particulars of the solution to deploy
-<strong>NOTE:</strong> For storage settings, the “Premium” type SKUs are not currently supported by this offering</li>
+  <li>
+    <p>You’ll be prompted to select a resource group and other particulars of the solution to deploy</p>
+
+    <p><strong>NOTE:</strong> For storage settings, the “Premium” type SKUs are not currently supported by this offering</p>
+  </li>
   <li>Once you’ve made your selections, click <strong>Review + Create</strong>
 at the bottom of the screen and click <strong>Create</strong></li>
   <li>You can check deployment status in the top right of the Azure Portal page
@@ -380,7 +383,7 @@ create jobs and tasks.</p>
 
 <h3 id="create-batch-job">Create Batch Job</h3>
 
-<p>Once authenticated, the next step is to create a batch job.</p>
+<p>Once authenticated, the next step is to create a batch job using the following variables:</p>
 
 <ul>
   <li>JOB_ID: A unique id to assign to the job being created.</li>
@@ -392,12 +395,12 @@ create jobs and tasks.</p>
 
 <h3 id="create-batch-task">Create Batch Task</h3>
 
-<p>Once the batch job has been created, a task can be added to it.  We will
-be doing this through a task.json specification file.</p>
+<p>Once the batch job has been created, a task can be added to it.  This can be done using the JOB_ID and
+a task.json specification file:</p>
 
 <ul>
   <li>JOB_ID: The same job id used when creating the batch job.</li>
-  <li>TASK_ID: A unique task id to assign to the task being created.</li>
+  <li>JSON_FILE: A file that defines a task in JSON format.</li>
 </ul>
 
 <h4 id="batch-command">Batch Command</h4>
@@ -406,10 +409,9 @@ be doing this through a task.json specification file.</p>
 starts.  The following is an example that will run a series of commands
 using bash.</p>
 
-<p>This example executes the command with bash to take advantage of bash
-commands, as well as make sure
+<p>This example takes advantage of bash to execute commands, as well as make sure that
 <a href="https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables#environment-variable-visibility">environment variables</a>
-are available.</p>
+are available.  The following are example environment variables and bash command:</p>
 
 <ul>
   <li>REF_DIR: The directory to untar the genome hash table to.</li>
@@ -418,6 +420,7 @@ are available.</p>
   <li>FQ2: The path to the second local FASTQ file on the node.</li>
   <li>RGID: The RGID associated with this DRAGEN run.</li>
   <li>RGSM: THE RGSM associated with this DRAGEN run.</li>
+  <li>OUTPUT_PREFIX: The prefix that will be used for the DRAGEN output files.</li>
   <li>LICENSE: The DRAGEN license.</li>
 </ul>
 
@@ -433,7 +436,7 @@ tar xzvf dragen.tar -C &lt;REF_DIR&gt;; </span><span class="se">\</span><span cl
     --enable-bam-indexing true </span><span class="se">\</span><span class="s2">
     --enable-map-align-output true </span><span class="se">\</span><span class="s2">
     --enable-sort true </span><span class="se">\</span><span class="s2">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="s2">
+    --output-file-prefix &lt;OUTPUT_PREFIX&gt; </span><span class="se">\</span><span class="s2">
     --enable-map-align true </span><span class="se">\</span><span class="s2">
     --output-format BAM </span><span class="se">\</span><span class="s2">
     --output-directory &lt;OUT_DIR&gt; </span><span class="se">\</span><span class="s2">
@@ -597,14 +600,14 @@ with each of the sections described in detail above.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="create">Create</h4>
+<h4 id="create-task">Create Task</h4>
 
 <p>With the command generated to run within the task, and accessible URLs
 generated for the genome tarball and FASTQ files, the following command
-can be used to create the batch task.</p>
+can be used to create the batch task:</p>
 
-<p>The below URLs must either be public, or private but made accessible
-(for example, with a SAS token).</p>
+<p>The following URLs must either be public, or private but made accessible
+(for example, with a SAS token):</p>
 
 <ul>
   <li>GENOME_URL: URL of a genome tarball.</li>
@@ -623,10 +626,14 @@ can be used to create the batch task.</p>
 
 <h4 id="working-example">Working Example</h4>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> job1 pool-id mypool
+<h5 id="batch-job-create">Batch Job Create</h5>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch job create <span class="nt">--id</span> job1 <span class="nt">--pool-id</span> mypool
 </code></pre></div></div>
 
-<p>The following command line string is stored to the <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable.</p>
+<h5 id="create-command">Create <code class="language-plaintext highlighter-rouge">$COMMAND</code></h5>
+
+<p>The following command line string is assigned to the <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable.</p>
 
 <h5 id="command-variable"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable</h5>
 
@@ -639,12 +646,12 @@ tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
 /opt/edico/bin/dragen -f -r dragen </span><span class="se">\</span><span class="sh">
     -1 1.fq.gz </span><span class="se">\</span><span class="sh">
     -2 2.fq.gz </span><span class="se">\</span><span class="sh">
-    --RGID NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="sh">
+    --RGID NA24385-AJ-Son-R1-NS_S33.1 </span><span class="se">\</span><span class="sh">
     --RGSM NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="sh">
     --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
     --enable-map-align-output true </span><span class="se">\</span><span class="sh">
     --enable-sort true </span><span class="se">\</span><span class="sh">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --output-file-prefix NA24385-AJ-Son-R1-NS_S33 </span><span class="se">\</span><span class="sh">
     --enable-map-align true </span><span class="se">\</span><span class="sh">
     --output-format BAM </span><span class="se">\</span><span class="sh">
     --output-directory output </span><span class="se">\</span><span class="sh">
@@ -666,7 +673,7 @@ EOF
 
 <p>The <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable is now interpolated in the <code class="language-plaintext highlighter-rouge">task.json</code> file below.</p>
 
-<h5 id="taskjson-1">task.json</h5>
+<h5 id="create-taskjson">Create task.json</h5>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task1"</span><span class="p">,</span><span class="w">
@@ -740,6 +747,8 @@ EOF
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h5 id="batch-task-create">Batch Task Create</h5>
+
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
     <span class="nt">--job-id</span> job1 <span class="se">\</span>
     <span class="nt">--json-file</span> task.json
@@ -753,14 +762,18 @@ processing.  DRAGEN does not currently support streaming from public Blob contai
 
 <h5 id="stream-from-azure-blob-storage">Stream from Azure Blob Storage</h5>
 
+<p>The following parameters are needed for streaming from Blob storage:</p>
+
 <ul>
-  <li>STORAGE_ACCOUNT: The name of the blob storage account.</li>
+  <li>STORAGE_ACCOUNT_NAME: The name of the blob storage account.</li>
   <li>STORAGE_ACCOUNT_KEY: An access key to the storage account.</li>
   <li>FQ1_URL: The full URL to the first FASTQ file in Azure Blob Storage.</li>
   <li>FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.</li>
 </ul>
 
-<h5 id="command-variable-for-streaming"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for Streaming</h5>
+<h5 id="command-variable-for-streaming-fastq-inputs"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for Streaming FASTQ Inputs</h5>
+
+<p>The following is an example <code class="language-plaintext highlighter-rouge">$COMMAND</code> variable that streams FASTQ inputs from Blob storage:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">COMMAND</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
 
@@ -780,7 +793,7 @@ tar xzvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
     --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
     --enable-map-align-output true </span><span class="se">\</span><span class="sh">
     --enable-sort true </span><span class="se">\</span><span class="sh">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --output-file-prefix &lt;OUTPUT_PREFIX&gt; </span><span class="se">\</span><span class="sh">
     --enable-map-align true </span><span class="se">\</span><span class="sh">
     --output-format BAM </span><span class="se">\</span><span class="sh">
     --output-directory output </span><span class="se">\</span><span class="sh">
@@ -798,22 +811,17 @@ pairs of Storage Account credentials.</p>
 <p>In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
-    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
-    <span class="nt">--json-file</span> task.json
-</code></pre></div></div>
-
 <h5 id="fastq-list">FASTQ List</h5>
 
 <p>If using a FASTQ list file to reference and stream FASTQ files, the FASTQ list file must
 also be local to the node.  The FASTQ files referenced in the FASTQ list can be URLs
-to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
-The below example shows an example of this using the
+to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.</p>
+
+<p>The following is an example of streaming inputs with a FASTQ list using the
 resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.
 This is stored as the <a href="#list_url-for-streaming"><code class="language-plaintext highlighter-rouge">$LIST_URL</code></a> variable.</p>
 
-<p>Since we are streaming from Azure Blob Storage, we will need the <code class="language-plaintext highlighter-rouge">~/.azure-credentials</code> file
-again.</p>
+<p>Since we are streaming from Azure Blob Storage, we will once again need the <code class="language-plaintext highlighter-rouge">~/.azure-credentials</code> file.</p>
 
 <h5 id="list_url-for-streaming"><code class="language-plaintext highlighter-rouge">$LIST_URL</code> for Streaming</h5>
 
@@ -829,7 +837,7 @@ again.</p>
     <span class="nt">--output</span> tsv<span class="si">)</span>
 </code></pre></div></div>
 
-<h5 id="command-variable-for-fastq"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for FastQ</h5>
+<h5 id="command-variable-for-streaming-with-fastq-list"><code class="language-plaintext highlighter-rouge">$COMMAND</code> Variable for Streaming with FASTQ List</h5>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">COMMAND</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
 
@@ -847,7 +855,7 @@ tar xvf dragen.tar -C dragen; </span><span class="se">\</span><span class="sh">
     --enable-bam-indexing true </span><span class="se">\</span><span class="sh">
     --enable-map-align-output true </span><span class="se">\</span><span class="sh">
     --enable-sort true </span><span class="se">\</span><span class="sh">
-    --output-file-prefix dragen-batch </span><span class="se">\</span><span class="sh">
+    --output-file-prefix &lt;OUTPUT_PREFIX&gt; </span><span class="se">\</span><span class="sh">
     --enable-map-align true </span><span class="se">\</span><span class="sh">
     --output-format BAM </span><span class="se">\</span><span class="sh">
     --output-directory output </span><span class="se">\</span><span class="sh">
@@ -868,11 +876,6 @@ EOF
     </span><span class="nl">"httpUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$LIST_URL"</span><span class="w">
 </span><span class="p">}]</span><span class="w">
 </span></code></pre></div></div>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>az batch task create <span class="se">\</span>
-    <span class="nt">--job-id</span> &lt;JOB_ID&gt; <span class="se">\</span>
-    <span class="nt">--json-file</span> task.json
-</code></pre></div></div>
 
 <h5 id="example-bash-script">Example Bash Script</h5>
 
@@ -919,20 +922,40 @@ that ran.  Once there, you will be able to access <code class="language-plaintex
 
 <p><img src="./images/batch-task-file-list.png" alt="batch-task-file-list" /></p>
 
+<h3 id="dragen-issues">DRAGEN Issues</h3>
+
+<p>For failed DRAGEN runs, navigate to the batch account in the portal, then job and task associated with the failed run
+to view DRAGEN log files.</p>
+
 <h3 id="common-issues">Common Issues</h3>
 
 <ol>
   <li>
-    <p>Quota issues.  If quota increases haven’t been requested, it can be common
+    <p>Quota issues:  If quota increases haven’t been requested, it can be common
 to run into quota issues for both the number of batch accounts as well as for
 the <code class="language-plaintext highlighter-rouge">Standard NPS Family vCPUs</code>.  Please make sure you have available
 <a href="#deployment-steps">quota</a> before deploying the ARM template.</p>
   </li>
   <li>
-    <p>Input file streaming.  Currently, DRAGEN does not support input streaming
+    <p>Input file streaming:  Currently, DRAGEN does not support input streaming
 from public Blob containers.  Input files from private Blob containers can be
 streamed provided that the proper storage credentials are passed to the batch
 command.</p>
+  </li>
+  <li>
+    <p>Command lines: Ensure that variables supplied to Azure CLI commands (e.g., account keys, license URLs, names of
+resource groups, batch accounts, storage accounts and containers, batch pools, etc.) are correct.  Ensure that DRAGEN
+command lines are formed properly and that the correct variables are passed to it.</p>
+  </li>
+  <li>
+    <p>Task JSON:  Ensure that keys and values supplied to the json task file are correct and complete.  Ensure that the
+file adheres to JSON formatting rules.</p>
+  </li>
+  <li>
+    <p>Authentication:  Ensure that the Azure CLI is authenticated for use with the proper subscription prior to creating
+resource groups and deploying ARM templates.  Log in to the proper Azure batch account prior to creating
+batch jobs and tasks.  Provide the required authentication (e.g., SAS tokens) for private storage accounts and/or
+input files, as needed.  Ensure that sufficient expiration periods are specified when generating authentication tokens.</p>
   </li>
 </ol>
 

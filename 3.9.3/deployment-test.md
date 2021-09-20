@@ -20,7 +20,7 @@ az batch account login -n <batch account name> -g <resource group name>
 
 ### Create Batch Job
 
-Once authenticated, the next step is to create a batch job.
+Once authenticated, the next step is to create a batch job using the following variables:
 
 * JOB_ID: A unique id to assign to the job being created.
 * POOL_ID: The name of the pool created with the provided ARM template.
@@ -31,11 +31,11 @@ az batch job create --id <JOB_ID> --pool-id <POOL_ID>
 
 ### Create Batch Task
 
-Once the batch job has been created, a task can be added to it.  We will
-be doing this through a task.json specification file.
+Once the batch job has been created, a task can be added to it.  This can be done using the JOB_ID and
+a task.json specification file:
 
 * JOB_ID: The same job id used when creating the batch job.
-* TASK_ID: A unique task id to assign to the task being created.
+* JSON_FILE: A file that defines a task in JSON format.
 
 #### Batch Command
 
@@ -43,10 +43,9 @@ The command passed to the batch task is what will run once the batch task
 starts.  The following is an example that will run a series of commands
 using bash.
 
-This example executes the command with bash to take advantage of bash
-commands, as well as make sure
+This example takes advantage of bash to execute commands, as well as make sure that
 [environment variables](https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables#environment-variable-visibility)
-are available.
+are available.  The following are example environment variables and bash command:
 
 * REF_DIR: The directory to untar the genome hash table to.
 * OUT_DIR: The directory to write the DRAGEN results to.
@@ -54,6 +53,7 @@ are available.
 * FQ2: The path to the second local FASTQ file on the node.
 * RGID: The RGID associated with this DRAGEN run.
 * RGSM: THE RGSM associated with this DRAGEN run.
+* OUTPUT_PREFIX: The prefix that will be used for the DRAGEN output files.
 * LICENSE: The DRAGEN license.
 
 ```bash
@@ -69,7 +69,7 @@ tar xzvf dragen.tar -C <REF_DIR>; \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
-    --output-file-prefix dragen-batch \
+    --output-file-prefix <OUTPUT_PREFIX> \
     --enable-map-align true \
     --output-format BAM \
     --output-directory <OUT_DIR> \
@@ -231,14 +231,14 @@ with each of the sections described in detail above.
 }
 ```
 
-#### Create
+#### Create Task
 
 With the command generated to run within the task, and accessible URLs
 generated for the genome tarball and FASTQ files, the following command
-can be used to create the batch task.
+can be used to create the batch task:
 
-The below URLs must either be public, or private but made accessible
-(for example, with a SAS token).
+The following URLs must either be public, or private but made accessible
+(for example, with a SAS token):
 
 * GENOME_URL: URL of a genome tarball.
 * FQ1_URL: URL of the first FASTQ file.
@@ -254,11 +254,15 @@ az batch task create \
 
 #### Working Example
 
+##### Batch Job Create
+
 ```sh
-az batch job create --id job1 pool-id mypool
+az batch job create --id job1 --pool-id mypool
 ```
 
-The following command line string is stored to the `$COMMAND` variable.
+##### Create `$COMMAND`
+
+The following command line string is assigned to the `$COMMAND` variable.
 
 ##### `$COMMAND` Variable
 
@@ -272,12 +276,12 @@ tar xzvf dragen.tar -C dragen; \
 /opt/edico/bin/dragen -f -r dragen \
     -1 1.fq.gz \
     -2 2.fq.gz \
-    --RGID NA24385-AJ-Son-R1-NS_S33 \
+    --RGID NA24385-AJ-Son-R1-NS_S33.1 \
     --RGSM NA24385-AJ-Son-R1-NS_S33 \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
-    --output-file-prefix dragen-batch \
+    --output-file-prefix NA24385-AJ-Son-R1-NS_S33 \
     --enable-map-align true \
     --output-format BAM \
     --output-directory output \
@@ -297,7 +301,7 @@ This one-liner achieves the following:
 
 The `$COMMAND` variable is now interpolated in the `task.json` file below.
 
-##### task.json
+##### Create task.json
 
 ```json
 {
@@ -372,6 +376,8 @@ The `$COMMAND` variable is now interpolated in the `task.json` file below.
 }
 ```
 
+##### Batch Task Create
+
 ```sh
 az batch task create \
     --job-id job1 \
@@ -386,12 +392,16 @@ processing.  DRAGEN does not currently support streaming from public Blob contai
 
 ##### Stream from Azure Blob Storage
 
-* STORAGE_ACCOUNT: The name of the blob storage account.
+The following parameters are needed for streaming from Blob storage:
+
+* STORAGE_ACCOUNT_NAME: The name of the blob storage account.
 * STORAGE_ACCOUNT_KEY: An access key to the storage account.
 * FQ1_URL: The full URL to the first FASTQ file in Azure Blob Storage.
 * FQ2_URL: The full URL to the second FASTQ file in Azure Blob Storage.
 
-##### `$COMMAND` Variable for Streaming
+##### `$COMMAND` Variable for Streaming FASTQ Inputs
+
+The following is an example `$COMMAND` variable that streams FASTQ inputs from Blob storage:
 
 ```bash
 COMMAND=$(cat <<EOF
@@ -412,7 +422,7 @@ tar xzvf dragen.tar -C dragen; \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
-    --output-file-prefix dragen-batch \
+    --output-file-prefix <OUTPUT_PREFIX> \
     --enable-map-align true \
     --output-format BAM \
     --output-directory output \
@@ -430,23 +440,17 @@ pairs of Storage Account credentials.
 In this case, the FASTQ files will no longer need to be referenced in the
 resourceFiles in the task.json
 
-```sh
-az batch task create \
-    --job-id <JOB_ID> \
-    --json-file task.json
-```
-
 ##### FASTQ List
 
 If using a FASTQ list file to reference and stream FASTQ files, the FASTQ list file must
 also be local to the node.  The FASTQ files referenced in the FASTQ list can be URLs
 to files on an Azure Storage Account, in which case, the FASTQs will be streamed by DRAGEN.
-The below example shows an example of this using the
+
+The following is an example of streaming inputs with a FASTQ list using the
 resourceFiles configuration as well as a SAS token to access the file in Azure Blob Storage.
 This is stored as the [`$LIST_URL`](#list_url-for-streaming) variable.
 
-Since we are streaming from Azure Blob Storage, we will need the `~/.azure-credentials` file
-again.
+Since we are streaming from Azure Blob Storage, we will once again need the `~/.azure-credentials` file.
 
 ##### `$LIST_URL` for Streaming
 
@@ -463,7 +467,7 @@ LIST_URL=$(az storage blob generate-sas \
     --output tsv)
 ```
 
-##### `$COMMAND` Variable for FastQ
+##### `$COMMAND` Variable for Streaming with FASTQ List
 
 ```bash
 COMMAND=$(cat <<EOF
@@ -482,7 +486,7 @@ tar xvf dragen.tar -C dragen; \
     --enable-bam-indexing true \
     --enable-map-align-output true \
     --enable-sort true \
-    --output-file-prefix dragen-batch \
+    --output-file-prefix <OUTPUT_PREFIX> \
     --enable-map-align true \
     --output-format BAM \
     --output-directory output \
@@ -503,12 +507,6 @@ EOF
     "filePath": "fastq_list.csv",
     "httpUrl": "$LIST_URL"
 }]
-```
-
-```sh
-az batch task create \
-    --job-id <JOB_ID> \
-    --json-file task.json
 ```
 
 ##### Example Bash Script

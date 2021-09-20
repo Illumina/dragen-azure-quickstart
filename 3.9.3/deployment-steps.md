@@ -18,7 +18,8 @@
 1. If prompted, review the terms and conditions and then choose **Accept Terms**
 1. Click **Create**
 1. You'll be prompted to select a resource group and other particulars of the solution to deploy
-**NOTE:** For storage settings, the "Premium" type SKUs are not currently supported by this offering
+
+    **NOTE:** For storage settings, the "Premium" type SKUs are not currently supported by this offering
 1. Once you've made your selections, click **Review + Create**
    at the bottom of the screen and click **Create**
 1. You can check deployment status in the top right of the Azure Portal page
