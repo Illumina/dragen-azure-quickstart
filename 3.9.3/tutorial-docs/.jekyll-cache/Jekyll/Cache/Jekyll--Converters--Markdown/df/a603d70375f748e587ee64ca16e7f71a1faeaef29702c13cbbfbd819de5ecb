@@ -1,4 +1,4 @@
-I"ˆ
+I"…
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -275,12 +275,12 @@ at the bottom of the screen and click <strong>Create</strong></li>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">offerSku</code></td>
-      <td>dragen-3-9-3</td>
+      <td>dragen-3-9</td>
       <td>SKU for the DRAGEN offer in the Marketplace</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">vmImageVersion</code></td>
-      <td>3.9.03</td>
+      <td>3.9.3</td>
       <td>DRAGEN version</td>
     </tr>
   </tbody>

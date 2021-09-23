@@ -33,8 +33,8 @@ The ARM template takes the following input parameters:
 | `storageAccountName` | `prefix` + "storage" | Name for Azure Blob Storage account (Total of 3-24 alphanumeric characters including prefix) |
 | `storageSku` | Standard_LRS* | [Azure Storage SKU](https://docs.microsoft.com/en-us/rest/api/storagerp/srp_sku_types) |
 | `storageNewOrExisting` | new | Specify whether to use an existing storage account or create a new one (Allowed values: `new` or `existing`) |
-| `offerSku` | dragen-3-9-3 | SKU for the DRAGEN offer in the Marketplace |
-| `vmImageVersion` | 3.9.03 | DRAGEN version |
+| `offerSku` | dragen-3-9 | SKU for the DRAGEN offer in the Marketplace |
+| `vmImageVersion` | 3.9.3 | DRAGEN version |
 
 ***NOTE:** The "Premium" type SKUs are not currently supported by this offering.
 
