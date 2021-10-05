@@ -516,7 +516,7 @@ There is a required `LICENSE_URL` environment variable, as well as some variable
 that must be set before running it, ie:
 
 ```sh
-LICENSE_URL=https://<username>:<password>@license.edico.com ./create-batch-task.sh
+LICENSE_URL=https://<username>:<password>@license.edicogenome.com ./create-batch-task.sh
 ```
 
 There are accompanying comments within the bash script to help set these.

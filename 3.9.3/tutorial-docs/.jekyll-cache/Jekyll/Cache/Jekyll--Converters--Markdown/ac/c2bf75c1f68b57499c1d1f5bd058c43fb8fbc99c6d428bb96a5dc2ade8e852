@@ -1,4 +1,4 @@
-I"…
+I"‹
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -883,7 +883,7 @@ EOF
 There is a required <code class="language-plaintext highlighter-rouge">LICENSE_URL</code> environment variable, as well as some variables within the script
 that must be set before running it, ie:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LICENSE_URL</span><span class="o">=</span>https://&lt;username&gt;:&lt;password&gt;@license.edico.com ./create-batch-task.sh
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LICENSE_URL</span><span class="o">=</span>https://&lt;username&gt;:&lt;password&gt;@license.edicogenome.com ./create-batch-task.sh
 </code></pre></div></div>
 
 <p>There are accompanying comments within the bash script to help set these.</p>
