@@ -1,0 +1,251 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "prefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Must be 1-17 characters in length, letters and numbers only (no hyphens or special characters)."
+            },
+            "minLength": 1,
+            "maxLength": 17
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('prefix'), 'storage')]"
+        },
+        "storageSku": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_ZRS",
+                "Standard_GZRS",
+                "Standard_RAGZRS"
+            ]
+        },
+        "storageNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ]
+        },
+        "storageResourceGroup": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().id]"
+        },
+        "offerSku": {
+            "type": "string",
+            "defaultValue": "dragen-3-9"
+        },
+        "vmImageVersion": {
+            "type": "string",
+            "defaultValue": "3.9.5"
+        },
+        "azureBatchServiceOid": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "batchAccountName": "[concat(parameters('prefix'), 'batch')]",
+        "batchPoolName": "[concat(parameters('prefix'), 'pool')]",
+        "batchPoolVmSize": "STANDARD_NP10s",
+        "publisher": "illuminainc1586452220102",
+        "offer": "dragen-vm",
+        "nodeAgentSku": "batch.node.centos 7",
+        "batchKeyVault": "[concat(parameters('prefix'),'kv')]",
+        "tenantId": "[subscription().tenantId]",
+        "storageAccountContainerName": "[concat(parameters('storageAccountName'), 'container')]"
+    },
+    "resources": [
+        {
+            "condition": "[equals(parameters('storageNewOrExisting'),'new')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-01-01",
+            "name": "[parameters('storageAccountName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('storageSku')]"
+            },
+            "kind": "StorageV2",
+            "properties": {},
+            "resources": [
+                {
+                    "type": "blobServices/containers",
+                    "apiVersion": "2021-01-01",
+                    "name": "[concat('default/', variables('storageAccountContainerName'))]",
+                    "dependsOn": [
+                        "[parameters('storageAccountName')]"
+                    ],
+                    "properties": {
+                        "publicAccess": "None"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[variables('batchKeyVault')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "[variables('tenantId')]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[variables('tenantId')]",
+                        "objectId": "[parameters('azureBatchServiceOid')]",
+                        "permissions": {
+                            "secrets": [
+                                "Get",
+                                "List",
+                                "Set",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "Purge"
+                            ],
+                            "keys": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "Decrypt",
+                                "Encrypt",
+                                "UnwrapKey",
+                                "WrapKey",
+                                "Verify",
+                                "Sign",
+                                "Purge"
+                            ],
+                            "certificates": [
+                                "Get",
+                                "List",
+                                "Update",
+                                "Create",
+                                "Import",
+                                "Delete",
+                                "Recover",
+                                "Backup",
+                                "Restore",
+                                "ManageContacts",
+                                "ManageIssuers",
+                                "GetIssuers",
+                                "ListIssuers",
+                                "SetIssuers",
+                                "DeleteIssuers",
+                                "Purge"
+                            ]
+                        }
+                    }
+                ],
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "enableRbacAuthorization": false
+            }
+        },
+        {
+            "type": "Microsoft.Batch/batchAccounts",
+            "name": "[variables('batchAccountName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                "[resourceId('Microsoft.KeyVault/vaults', variables('batchKeyVault'))]"
+            ],
+            "apiVersion": "2021-01-01",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "poolAllocationMode": "UserSubscription",
+                "keyVaultReference": {
+                    "id": "[resourceId('Microsoft.KeyVault/vaults', variables('batchKeyVault'))]",
+                    "url": "[reference(resourceId('Microsoft.KeyVault/vaults', variables('batchKeyVault'))).vaultUri]"
+                },
+                "publicNetworkAccess": "Enabled",
+                "encryption": {
+                    "keySource": "Microsoft.Batch"
+                },
+                "autoStorage": {
+                    "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Batch/batchAccounts/pools",
+            "apiVersion": "2021-01-01",
+            "name": "[concat(variables('batchAccountName'), '/', variables('batchPoolName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Batch/batchAccounts', variables('batchAccountName'))]"
+            ],
+            "properties": {
+                "vmSize": "[variables('batchPoolVmSize')]",
+                "interNodeCommunication": "Disabled",
+                "taskSlotsPerNode": 1,
+                "taskSchedulingPolicy": {
+                    "nodeFillType": "Spread"
+                },
+                "deploymentConfiguration": {
+                    "virtualMachineConfiguration": {
+                        "imageReference": {
+                            "publisher": "[variables('publisher')]",
+                            "offer": "[variables('offer')]",
+                            "sku": "[parameters('offerSku')]",
+                            "version": "[parameters('vmImageVersion')]"
+                        },
+                        "nodeAgentSkuId": "[variables('nodeAgentSku')]"
+                    }
+                },
+                "scaleSettings": {
+                    "fixedScale": {
+                        "targetDedicatedNodes": 1,
+                        "targetLowPriorityNodes": 0,
+                        "resizeTimeout": "PT15M"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "jobPool": {
+            "type": "string",
+            "value": "[variables('batchPoolName')]"
+        },
+        "batchAccount": {
+            "type": "string",
+            "value": "[variables('batchAccountName')]"
+        },
+        "batchStorageAccount": {
+            "type": "string",
+            "value": "[parameters('storageAccountName')]"
+        },
+        "batchStorageContainer": {
+            "type": "string",
+            "value": "[variables('storageAccountContainerName')]"
+        },
+        "storageResourceGroupId": {
+            "type": "string",
+            "value": "[parameters('storageResourceGroup')]"
+        }
+    }
+}
