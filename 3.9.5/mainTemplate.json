@@ -51,9 +51,7 @@
             "defaultValue": "3.9.5"
         },
         "azureBatchServiceOid": {
-            "type": "string",
-                                    "constraints": {
-                            "regex": "^(?=[a-z0-9-]{36,}$)[a-z0-9]{8}[-]{1}[a-z0-9]{4}[-]{1}[a-z0-9]{4}[-]{1}[a-z0-9]{4}[-]{1}[a-z0-9]{12}$",
+            "type": "string"
         }
     },
     "variables": {
