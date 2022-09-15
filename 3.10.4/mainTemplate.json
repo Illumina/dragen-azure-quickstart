@@ -55,7 +55,7 @@
         },
         "batchPoolVmSize": {
             "type": "string",
-            "defaultValue": "STANDARD_NP10s",
+            "defaultValue": "STANDARD_NP20s",
             "metadata": {
                 "description": "Size for the virtual machine."
             }
@@ -75,7 +75,7 @@
         {
             "condition": "[equals(parameters('storageNewOrExisting'),'new')]",
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2021-01-01",
+            "apiVersion": "2022-05-01",
             "name": "[parameters('storageAccountName')]",
             "location": "[parameters('location')]",
             "sku": {
@@ -88,7 +88,7 @@
             "resources": [
                 {
                     "type": "blobServices/containers",
-                    "apiVersion": "2021-01-01",
+                    "apiVersion": "2022-05-01",
                     "name": "[concat('default/', variables('storageAccountContainerName'))]",
                     "dependsOn": [
                         "[parameters('storageAccountName')]"
@@ -179,7 +179,7 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
                 "[resourceId('Microsoft.KeyVault/vaults', variables('batchKeyVault'))]"
             ],
-            "apiVersion": "2021-01-01",
+            "apiVersion": "2022-06-01",
             "location": "[parameters('location')]",
             "identity": {
                 "type": "None"
@@ -201,7 +201,7 @@
         },
         {
             "type": "Microsoft.Batch/batchAccounts/pools",
-            "apiVersion": "2021-01-01",
+            "apiVersion": "2022-06-01",
             "name": "[concat(variables('batchAccountName'), '/', variables('batchPoolName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Batch/batchAccounts', variables('batchAccountName'))]"
