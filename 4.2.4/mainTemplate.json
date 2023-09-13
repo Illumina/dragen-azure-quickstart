@@ -44,11 +44,11 @@
         },
         "offerSku": {
             "type": "string",
-            "defaultValue": "dragen-4-0"
+            "defaultValue": "dragen-4-2"
         },
         "vmImageVersion": {
             "type": "string",
-            "defaultValue": "4.0.3"
+            "defaultValue": "4.2.4"
         },
         "azureBatchServiceOid": {
             "type": "string"

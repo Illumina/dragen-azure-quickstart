@@ -276,12 +276,12 @@ at the bottom of the screen and click <strong>Create</strong></li>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">offerSku</code></td>
-      <td>dragen-4-0</td>
+      <td>dragen-4-2</td>
       <td>SKU for the DRAGEN offer in the Marketplace</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">vmImageVersion</code></td>
-      <td>4.0.3</td>
+      <td>4.2.4</td>
       <td>DRAGEN version</td>
     </tr>
   </tbody>
