@@ -23,7 +23,7 @@ BATCH_C="<STORAGE ACCOUNT CONTAINER NAME>"
 SAS_EXPIRATION="<EXPIRATION DATE>"
 
 # Genomic hash-table tarball
-GENOME_URL="https://webdata.illumina.com/downloads/software/dragen/references/genome-files/hg38-alt_masked.cnv.graph.hla.rna-9-r3.0-1.tar.gz"
+GENOME_URL="https://webdata.illumina.com/downloads/software/dragen/references/genome-files/hg38-alt_masked.cnv.graph.hla.rna-9-r3.0-1.tar"
 # FastQ Sample 1
 FASTQ_1="https://ilmn-dragen-giab-samples.s3.amazonaws.com/WGS/precisionFDA_v2_HG002/HG002.novaseq.pcr-free.35x.R1.fastq.gz"
 # FastQ Sample 2

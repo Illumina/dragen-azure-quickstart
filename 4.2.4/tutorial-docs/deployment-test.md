@@ -240,7 +240,7 @@ can be used to create the batch task:
 The following URLs must either be public, or private but made accessible
 (for example, with a SAS token):
 
-* GENOME_URL: URL of a genome tarball.
+* GENOME_URL: URL of a genome tarball
 * FQ1_URL: URL of the first FASTQ file.
 * FQ2_URL: URL of the second FASTQ file.
 
@@ -390,15 +390,15 @@ While it is always necessary to have the genome file saved locally on the node, 
 BAMs from private Azure Blob containers for faster processing. DRAGEN does not currently support streaming from public
 Blob containers.
 
-Blob storage authentication has been improved with DRAGEN v3.10. Credential management is now controlled via environment
-variables used in the Azure SDK, allowing support for Azure SAS streaming and BLOB identity-based credential management.
-Support for Azure managed identity authentication was introduced with v3.10.
+Blob storage authentication has been improved for DRAGEN v3.10 and above. Credential management in these versions is
+controlled via environment variables used in the Azure SDK, allowing support for Azure SAS streaming and BLOB identity-
+based credential management.
 
 Starting with DRAGEN v3.10, the need for and use of the "~/.azure-credentials" file for input streaming has been
 deprecated. New environment variables were introduced for input streaming. Environment variables remove the
 need for file parsing logic. Using access keys will improve security since the key will only live in memory.
 
-DRAGEN v3.10 supports two cases for Azure authentication:
+DRAGEN v3.10 and above support two cases for Azure authentication:
 
 * Storage account access keys
 * Managed identities
