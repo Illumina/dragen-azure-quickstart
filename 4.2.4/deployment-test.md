@@ -240,7 +240,7 @@ can be used to create the batch task:
 The following URLs must either be public, or private but made accessible
 (for example, with a SAS token):
 
-* GENOME_URL: URL of a genome tarball
+* GENOME_URL: URL of a genome tarball.
 * FQ1_URL: URL of the first FASTQ file.
 * FQ2_URL: URL of the second FASTQ file.
 

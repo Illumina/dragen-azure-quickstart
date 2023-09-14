@@ -1,4 +1,4 @@
-I"µ3
+I"¶3
 <h2 id="introduction">Introduction</h2>
 
 <p>This Quick Start guide provides instructions and resources to guide users through deploying <a href="https://www.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html">Dynamic Read Analysis for GENomics (DRAGEN)</a> on Azure.  It is primarily intended for users who are interested in a quick and easy setup for running genomics workloads in the cloud.</p>
@@ -611,7 +611,7 @@ can be used to create the batch task:</p>
 (for example, with a SAS token):</p>
 
 <ul>
-  <li>GENOME_URL: URL of a genome tarball</li>
+  <li>GENOME_URL: URL of a genome tarball.</li>
   <li>FQ1_URL: URL of the first FASTQ file.</li>
   <li>FQ2_URL: URL of the second FASTQ file.</li>
 </ul>
