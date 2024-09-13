@@ -23,11 +23,11 @@ BATCH_C="<STORAGE ACCOUNT CONTAINER NAME>"
 SAS_EXPIRATION="<EXPIRATION DATE>"
 
 # Genomic hash-table tarball
-GENOME_URL="https://webdata.illumina.com/downloads/software/dragen/references/genome-files/hg38-alt_masked.cnv.graph.hla.rna-9-r3.0-1.tar"
+GENOME_URL="https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38-alt_masked.cnv.graph.hla.rna-10-r4.0-1.tar.gz"
 # FastQ Sample 1
-FASTQ_1="https://ilmn-dragen-giab-samples.s3.amazonaws.com/WGS/precisionFDA_v2_HG002/HG002.novaseq.pcr-free.35x.R1.fastq.gz"
+FASTQ_1="https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R1_001.fastq.gz"
 # FastQ Sample 2
-FASTQ_2="https://ilmn-dragen-giab-samples.s3.amazonaws.com/WGS/precisionFDA_v2_HG002/HG002.novaseq.pcr-free.35x.R2.fastq.gz"
+FASTQ_2="https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R2_001.fastq.gz"
 # Associated RGSM
 RGSM="NA24385-AJ-Son-R1-NS_S33"
 # A unique id to assign to the batch task.

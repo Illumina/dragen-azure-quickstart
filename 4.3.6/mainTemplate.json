@@ -44,11 +44,11 @@
         },
         "offerSku": {
             "type": "string",
-            "defaultValue": "dragen-4-2"
+            "defaultValue": "dragen-4-3"
         },
         "vmImageVersion": {
             "type": "string",
-            "defaultValue": "4.2.7"
+            "defaultValue": "4.3.6"
         },
         "azureBatchServiceOid": {
             "type": "string"
@@ -201,6 +201,7 @@
         },
         {
             "type": "Microsoft.Batch/batchAccounts/pools",
+            "apiVersion": "2023-05-01",
             "apiVersion": "2023-05-01",
             "name": "[concat(variables('batchAccountName'), '/', variables('batchPoolName'))]",
             "dependsOn": [

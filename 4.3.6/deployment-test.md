@@ -226,8 +226,8 @@ with each of the sections described in detail above.
 {
     "id": "<TASK_ID>",
     "commandLine": "<COMMAND>",
-    "resourcesFiles": [<RESOURCE_FILES>],
-    "outputFiles": [<OUTPUT_FILES>]
+    "resourcesFiles": "<RESOURCE_FILES>",
+    "outputFiles": "<OUTPUT_FILES>"
 }
 ```
 
@@ -309,7 +309,7 @@ The `$COMMAND` variable is now interpolated in the `task.json` file below.
     "commandLine": "$COMMAND",
     "resourceFiles": [{
         "filePath": "dragen.tar",
-        "httpUrl": "https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38-alt_masked.cnv.graph.hla.rna-9-r3.0-1.tar"
+        "httpUrl": "https://dragentestdata.blob.core.windows.net/reference-genomes/Hsapiens/hash-tables/hg38-alt_masked.cnv.graph.hla.rna-10-r4.0-1.tar.gz"
     }, {
         "filePath": "1.fq.gz",
         "httpUrl": "https://dragentestdata.blob.core.windows.net/samples/wes/NA24385-AJ-Son-R1-NS_S33/NA24385-AJ-Son-R1-NS_S33_L001_R1_001.fastq.gz"
