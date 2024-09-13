@@ -1,0 +1,66 @@
+---
+---
+
+@import "hydeout";
+
+select {
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    margin-left: 1.3em;
+}
+
+.home #sidebar {
+    position: fixed;
+    top: 0;
+
+    .site-title {
+        font-size: 4.0rem;
+    }
+
+    .icon-dragen-text {
+        font-size: 1.299em;
+    }
+
+    .lead {
+        font-size: 1.5em;
+    }
+}
+
+.sidebar-nav-list > .sidebar-nav-list {
+    margin-left: 10px;
+}
+
+li > ul {
+    margin-bottom: 0;
+}
+
+.spacer {
+    text-align: center;
+    font-size:0.3em;
+    display: block;
+    margin: 0.35em;
+    color: #444;
+}
+
+.mobile-header { display:none; }
+
+@media (max-width: 768px) {
+    .home #sidebar {
+        display: none;
+    }
+
+    .mobile-header {
+        display: block;
+        .logo {
+            text-align: center;
+            font-size: 6.0rem;
+        }
+    }
+
+
+    #page-header {
+        margin: 10px auto;
+    }
+}
